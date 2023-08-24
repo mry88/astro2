@@ -1,4 +1,4 @@
-const { Product } = require("../models/Product");
+const { Product } = require("../models/product");
 const { auth, isUser, isAdmin } = require("../middleware/auth");
 const cloudinary = require("../utils/cloudinary");
 
@@ -132,10 +132,14 @@ router.get("/", async (req, res) => {
 
 router.get("/find/:id", async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate('features');
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
     res.status(200).send(product);
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Error fetching product:", error.message, error.stack);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 });
 

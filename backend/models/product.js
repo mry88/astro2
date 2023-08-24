@@ -7,6 +7,10 @@ const productSchema = new mongoose.Schema(
     desc: { type: String, required: true },
     price: { type: Number, required: true },
     image: { type: Object, required: true },
+    features: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Feature',
+    }],
   },
   { timestamps: true }
 );

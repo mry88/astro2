@@ -78,13 +78,17 @@ const Cart = () => {
                     </Link>
                     <div>
                       <h3>{cartItem.name}</h3>
-                      <p>{cartItem.desc}</p>
+                      <p>{cartItem.desc}</p><br />
+                      <h3>Additional Feature :</h3>
+                      {cartItem.selectedFeatures && cartItem.selectedFeatures.map(fn => (
+                        <p key={fn}>{fn}</p>
+                      ))}
                       <button onClick={() => handleRemoveFromCart(cartItem)}>
                         Remove
                       </button>
                     </div>
                   </div>
-                  <div className="cart-product-price">${cartItem.price}</div>
+                  <div className="cart-product-price">${cartItem.totalPrice}</div>
                   <div className="cart-product-quantity">
                     <button onClick={() => handleDecreaseCart(cartItem)}>
                       -
@@ -93,7 +97,7 @@ const Cart = () => {
                     <button onClick={() => handleAddToCart(cartItem)}>+</button>
                   </div>
                   <div className="cart-product-total-price">
-                    ${cartItem.price * cartItem.cartQuantity}
+                    ${cartItem.totalPrice * cartItem.cartQuantity}
                   </div>
                 </div>
               ))}

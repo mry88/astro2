@@ -12,14 +12,14 @@ const Dashboard = () => {
     <StyledDashboard>
       <SideNav>
         <h3>Quick Links</h3>
-        <NavLink
+        {/* <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"
           }
           to="/admin/summary"
         >
           <FaTachometerAlt /> Summary
-        </NavLink>
+        </NavLink> */}
         <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"
@@ -28,14 +28,14 @@ const Dashboard = () => {
         >
           <FaStore /> Products
         </NavLink>
-        <NavLink
+        {/* <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"
           }
           to="/admin/orders"
         >
           <FaClipboard /> Orders
-        </NavLink>
+        </NavLink> */}
         <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"

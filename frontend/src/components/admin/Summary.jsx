@@ -37,7 +37,17 @@ const Summary = () => {
           ((res.data[0].total - res.data[1].total) / res.data[1].total) * 100
         );
       } catch (err) {
-        console.log(err);
+        if (err.response) {
+          // The request was made and the server responded with a status code outside of the range of 2xx
+          console.log(err.response.data);
+        } else if (err.request) {
+          // The request was made but no response was received
+          console.log(err.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', err.message);
+        }
+        //console.log(err);
       }
     }
     fetchData();
