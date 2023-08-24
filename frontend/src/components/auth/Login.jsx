@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import "./login.css";
 import bgImg from "./img1.jpg";
+=======
+import { StyledForm } from "./StyledForm";
+>>>>>>> main
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,6 +34,7 @@ const Login = () => {
 
   return (
     <>
+<<<<<<< HEAD
       <div className="login">
         <div className="col-1">
           <h2>Login</h2>
@@ -59,6 +64,25 @@ const Login = () => {
           <img src={bgImg} alt="" />
         </div>
       </div>
+=======
+      <StyledForm onSubmit={handleSubmit}>
+        <h2>Login</h2>
+        <input
+          type="email"
+          placeholder="email"
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
+        />
+        <input
+          type="password"
+          placeholder="password"
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
+        />
+        <button>
+          {auth.loginStatus === "pending" ? "Submitting..." : "Login"}
+        </button>
+        {auth.loginStatus === "rejected" ? <p>{auth.loginError}</p> : null}
+      </StyledForm>
+>>>>>>> main
     </>
   );
 };

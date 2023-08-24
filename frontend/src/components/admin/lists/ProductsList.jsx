@@ -14,9 +14,16 @@ export default function ProductsList() {
   const rows =
     items &&
     items.map((item) => {
+<<<<<<< HEAD
       return {
         id: item._id,
         imageUrl: item.image.url,
+=======
+      console.log(item.image);
+      return {
+        id: item._id,
+        imageUrl: item.image,
+>>>>>>> main
         pName: item.name,
         pDesc: item.desc,
         price: item.price.toLocaleString(),

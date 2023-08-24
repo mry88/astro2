@@ -11,7 +11,10 @@ import {
 
 import { Link } from "react-router-dom";
 import PayButton from "./PayButton";
+<<<<<<< HEAD
 import "../App.css";
+=======
+>>>>>>> main
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -79,13 +82,25 @@ const Cart = () => {
                     </Link>
                     <div>
                       <h3>{cartItem.name}</h3>
+<<<<<<< HEAD
                       <p>{cartItem.desc}</p>
+=======
+                      <p>{cartItem.desc}</p><br />
+                      <h3>Additional Feature :</h3>
+                      {cartItem.selectedFeatures && cartItem.selectedFeatures.map(fn => (
+                        <p key={fn}>{fn}</p>
+                      ))}
+>>>>>>> main
                       <button onClick={() => handleRemoveFromCart(cartItem)}>
                         Remove
                       </button>
                     </div>
                   </div>
+<<<<<<< HEAD
                   <div className="cart-product-price">Rp {cartItem.price}</div>
+=======
+                  <div className="cart-product-price">${cartItem.totalPrice}</div>
+>>>>>>> main
                   <div className="cart-product-quantity">
                     <button onClick={() => handleDecreaseCart(cartItem)}>
                       -
@@ -94,7 +109,11 @@ const Cart = () => {
                     <button onClick={() => handleAddToCart(cartItem)}>+</button>
                   </div>
                   <div className="cart-product-total-price">
+<<<<<<< HEAD
                     Rp {cartItem.price * cartItem.cartQuantity}
+=======
+                    ${cartItem.totalPrice * cartItem.cartQuantity}
+>>>>>>> main
                   </div>
                 </div>
               ))}
@@ -106,7 +125,11 @@ const Cart = () => {
             <div className="cart-checkout">
               <div className="subtotal">
                 <span>Subtotal</span>
+<<<<<<< HEAD
                 <span className="amount">Rp {cart.cartTotalAmount}</span>
+=======
+                <span className="amount">${cart.cartTotalAmount}</span>
+>>>>>>> main
               </div>
               <p>Taxes and shipping calculated at checkout</p>
               {auth._id ? (

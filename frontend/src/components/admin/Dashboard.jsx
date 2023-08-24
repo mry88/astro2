@@ -12,30 +12,50 @@ const Dashboard = () => {
     <StyledDashboard>
       <SideNav>
         <h3>Quick Links</h3>
+<<<<<<< HEAD
         <NavLink
+=======
+        {/* <NavLink
+>>>>>>> main
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"
           }
           to="/admin/summary"
         >
           <FaTachometerAlt /> Summary
+<<<<<<< HEAD
         </NavLink>
+=======
+        </NavLink> */}
+>>>>>>> main
         <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"
           }
+<<<<<<< HEAD
           to="/admin/products/create-product"
         >
           <FaStore /> Products
         </NavLink>
         <NavLink
+=======
+          to="/admin/products"
+        >
+          <FaStore /> Products
+        </NavLink>
+        {/* <NavLink
+>>>>>>> main
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"
           }
           to="/admin/orders"
         >
           <FaClipboard /> Orders
+<<<<<<< HEAD
         </NavLink>
+=======
+        </NavLink> */}
+>>>>>>> main
         <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"

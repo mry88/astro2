@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../slices/authSlice";
 import "./style.css";
 import bgImg from "./img1.jpg";
+=======
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../slices/authSlice";
+import { StyledForm } from "./StyledForm";
+>>>>>>> main
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -31,6 +38,7 @@ const Register = () => {
 
   return (
     <>
+<<<<<<< HEAD
       <div className="register">
         <div className="col-1">
 
@@ -68,6 +76,32 @@ const Register = () => {
           <img src={bgImg} alt="" />
         </div>
       </div>
+=======
+      <StyledForm onSubmit={handleSubmit}>
+        <h2>Register</h2>
+        <input
+          type="text"
+          placeholder="name"
+          onChange={(e) => setUser({ ...user, name: e.target.value })}
+        />
+        <input
+          type="email"
+          placeholder="email"
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
+        />
+        <input
+          type="password"
+          placeholder="password"
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
+        />
+        <button>
+          {auth.rigisterStatus === "pending" ? "Submitting..." : "Register"}
+        </button>
+        {auth.registerStatus === "rejected" ? (
+          <p>{auth.registerError}</p>
+        ) : null}
+      </StyledForm>
+>>>>>>> main
     </>
   );
 };
