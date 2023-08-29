@@ -22,11 +22,7 @@ const CheckoutSuccess = () => {
       <p>Check your order status at your profile after about 10mins.</p>
       <p>
         Incase of any inqueries contact the support at{" "}
-<<<<<<< HEAD
-        <strong>support@hiya.com</strong>
-=======
         <strong>support@onlineshop.com</strong>
->>>>>>> main
       </p>
     </Container>
   );

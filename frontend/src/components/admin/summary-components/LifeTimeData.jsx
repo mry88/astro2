@@ -18,11 +18,7 @@ const LifeTimeData = () => {
       </Info>
       <Info>
         <Title>Earnings</Title>
-<<<<<<< HEAD
-        <Data>Rp 200,000</Data>
-=======
         <Data>$200,000</Data>
->>>>>>> main
       </Info>
     </Main>
   );

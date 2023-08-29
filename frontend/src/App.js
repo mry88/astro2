@@ -24,6 +24,10 @@ import ProductsList from "./components/admin/lists/ProductsList";
 import Product from "./components/Details/Product";
 import UserProfile from "./components/Details/UserProfile";
 import Order from "./components/Details/Order";
+import Features from "./components/admin/Features";
+import FeaturesList from "./components/admin/lists/FeaturesList";
+import Category from "./components/admin/Category";
+import CategoryList from "./components/admin/lists/CategoryList";
 
 function App() {
   const dispatch = useDispatch();
@@ -52,6 +56,12 @@ function App() {
               <Route path="products" element={<Products />}>
                 <Route index element={<ProductsList />} />
                 <Route path="create-product" element={<CreateProduct />} />
+              </Route>
+              <Route path="features" element={<Features />}>
+                <Route index element={<FeaturesList />} />
+              </Route>
+              <Route path="category" element={<Category />}>
+                <Route index element={<CategoryList />} />
               </Route>
               <Route path="users" element={<Users />} />
               <Route path="orders" element={<Orders />} />

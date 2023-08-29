@@ -37,9 +37,6 @@ const Summary = () => {
           ((res.data[0].total - res.data[1].total) / res.data[1].total) * 100
         );
       } catch (err) {
-<<<<<<< HEAD
-        console.log(err);
-=======
         if (err.response) {
           // The request was made and the server responded with a status code outside of the range of 2xx
           console.log(err.response.data);
@@ -51,7 +48,6 @@ const Summary = () => {
           console.log('Error', err.message);
         }
         //console.log(err);
->>>>>>> main
       }
     }
     fetchData();
@@ -60,11 +56,7 @@ const Summary = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-<<<<<<< HEAD
-        const res = await axios.get(`${url}/admin/orders/stats`, setHeaders());
-=======
         const res = await axios.get(`${url}/orders/stats`, setHeaders());
->>>>>>> main
 
         res.data.sort(compare);
         setOrders(res.data);

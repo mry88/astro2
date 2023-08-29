@@ -1,18 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-<<<<<<< HEAD
-=======
 require("./models/features");
->>>>>>> main
+require("./models/category");
 const register = require("./routes/register");
 const login = require("./routes/login");
 const orders = require("./routes/orders");
 const stripe = require("./routes/stripe");
 const users = require("./routes/users");
 const productsRoute = require("./routes/products");
+const featuresRoute = require("./routes/features");
+const categoryRoute = require("./routes/category");
 
 const products = require("./products");
+const { Product } = require("./models/product");
+const { Feature } = require("./models/features");
+const { Category } = require("./models/category");
 
 const app = express();
 
@@ -26,14 +29,27 @@ app.use("/api/login", login);
 app.use("/api/orders", orders);
 app.use("/api/stripe", stripe);
 app.use("/api/products", productsRoute);
+app.use("/api/features", featuresRoute);
+app.use("/api/category", categoryRoute);
 app.use("/api/users", users);
 
 app.get("/", (req, res) => {
   res.send("Welcome our to online shop API...");
 });
 
-app.get("/products", (req, res) => {
+app.get("/products", async (req, res) => {
+  const products = await Product.find().populate('features').exec();
   res.send(products);
+});
+
+app.get("/features", async (req, res) => {
+  const features = await Feature.find();
+  res.send(features);
+});
+
+app.get("/category", async (req, res) => {
+  const category = await Category.find();
+  res.send(category);
 });
 
 const uri = process.env.DB_URI;

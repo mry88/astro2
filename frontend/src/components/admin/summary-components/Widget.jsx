@@ -10,11 +10,7 @@ const Widget = ({ data }) => {
         <Text>
           <h3>
             {data.isMoney
-<<<<<<< HEAD
-              ? "Rp" + data.digits?.toLocaleString()
-=======
               ? "$" + data.digits?.toLocaleString()
->>>>>>> main
               : data.digits?.toLocaleString()}
           </h3>
           <p>{data.title}</p>

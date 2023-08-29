@@ -3,43 +3,30 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { productDelete } from "../../../slices/productsSlice";
-import EditProduct from "../EditProduct";
+import { featureDelete } from "../../../slices/featuresSlice";
+//import EditFeature from "../EditFeature";
 
-export default function ProductsList() {
+export default function FeaturesList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { items } = useSelector((state) => state.products);
+  const {items} = useSelector((state) => state.features);
+  console.log(items);
 
   const rows =
     items &&
     items.map((item) => {
-      console.log(item.image);
-      console.log(item.features);
+      console.log(item.name);
+      console.log(item.description);
       return {
         id: item._id,
-        imageUrl: item.image,
         pName: item.name,
-        pDesc: item.desc,
+        pDesc: item.description,
         price: item.price.toLocaleString(),
-        feature: item.features,
       };
     });
 
   const columns = [
     { field: "id", headerName: "ID", width: 220 },
-    {
-      field: "imageUrl",
-      headerName: "Image",
-      width: 80,
-      renderCell: (params) => {
-        return (
-          <ImageContainer>
-            <img src={params.row.imageUrl} alt="" />
-          </ImageContainer>
-        );
-      },
-    },
     { field: "pName", headerName: "Name", width: 130 },
     { field: "pDesc", headerName: "Description", width: 130 },
     {
@@ -47,7 +34,6 @@ export default function ProductsList() {
       headerName: "Price(Rp.)",
       width: 80,
     },
-    { field: "feature", headerName: "Features", width: 300 },
     {
       field: "actions",
       headerName: "Actions",
@@ -55,9 +41,9 @@ export default function ProductsList() {
       renderCell: (params) => {
         return (
           <Actions>
-            <Delete onClick={() => handleDelete(params.row.id)}>Delete</Delete>
-            <EditProduct prodId={params.row.id} />
-            <View onClick={() => navigate(`/product/${params.row.id}`)}>
+            {/* <Delete onClick={() => handleDelete(params.row.id)}>Delete</Delete>
+            <EditFeature prodId={params.row.id} /> */}
+            <View onClick={() => navigate(`/feature/${params.row.id}`)}>
               View
             </View>
           </Actions>
@@ -66,9 +52,9 @@ export default function ProductsList() {
     },
   ];
 
-  const handleDelete = (id) => {
-    dispatch(productDelete(id));
-  };
+//   const handleDelete = (id) => {
+//     dispatch(featureDelete(id));
+//   };
 
   return (
     <div style={{ height: 400, width: "100%", marginTop: "2rem" }}>
