@@ -22,7 +22,14 @@ const app = express();
 require("dotenv").config();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, // If you're using cookies or sessions
+    optionsSuccessStatus: 204,
+  })
+);
 
 app.use("/api/register", register);
 app.use("/api/login", login);

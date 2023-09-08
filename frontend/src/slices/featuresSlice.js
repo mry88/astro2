@@ -1,43 +1,64 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { url } from './api';
+import { setHeaders, url } from './api';
+import { toast } from 'react-toastify';
 
 const initialState = {
-    items: [],
-    status: null,
-    createStatus: null,
-    editStatus: null,
-    deleteStatus: null,
-  };
+  items: [],
+  status: null,
+  createStatus: null,
+  editStatus: null,
+  deleteStatus: null,
+};
 
-  export const featuresFetch = createAsyncThunk(
-    "features/featuresFetch",
-    async () => {
-      try {
-        const response = await axios.get(`${url}/features`);
-  
-        return response.data;
-      } catch (error) {
-        console.log(error);
-      }
+export const featuresFetch = createAsyncThunk(
+  "features/featuresFetch",
+  async () => {
+    try {
+      const response = await axios.get(`${url}/features`);
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
     }
-  );
+  }
+);
+
+export const featuresEdit = createAsyncThunk(
+  "features/featuresEdit",
+  async (values) => {
+    try {
+      const response = await axios.put(
+        `${url}/features/${values.features._id}`,
+        values,
+        setHeaders()
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data, {
+        position: "bottom-left",
+      });
+    }
+  }
+);
 
 const featuresSlice = createSlice({
-    name: "features",
-    initialState,
-    reducers: {},
-    extraReducers: {
-      [featuresFetch.pending]: (state, action) => {
-        state.status = "pending";
-      },
-      [featuresFetch.fulfilled]: (state, action) => {
-        state.items = action.payload;
-        state.status = "success";
-      },
-      [featuresFetch.rejected]: (state, action) => {
-        state.status = "rejected";
-      },
+  name: "features",
+  initialState,
+  reducers: {},
+  extraReducers: {
+    [featuresFetch.pending]: (state, action) => {
+      state.status = "pending";
+    },
+    [featuresFetch.fulfilled]: (state, action) => {
+      state.items = action.payload;
+      state.status = "success";
+    },
+    [featuresFetch.rejected]: (state, action) => {
+      state.status = "rejected";
+    },
     //   [productsCreate.pending]: (state, action) => {
     //     state.createStatus = "pending";
     //   },
@@ -83,7 +104,7 @@ const featuresSlice = createSlice({
     //   [productsEdit.rejected]: (state, action) => {
     //     state.editStatus = "rejected";
     //   },
-    },
+  },
 });
 
 export const { addFeature } = featuresSlice.actions;

@@ -28,6 +28,8 @@ import Features from "./components/admin/Features";
 import FeaturesList from "./components/admin/lists/FeaturesList";
 import Category from "./components/admin/Category";
 import CategoryList from "./components/admin/lists/CategoryList";
+import CreateFeatures from "./components/admin/CreateFeatures";
+import EditFeatures from "./components/admin/EditFeatures";
 
 function App() {
   const dispatch = useDispatch();
@@ -59,6 +61,8 @@ function App() {
               </Route>
               <Route path="features" element={<Features />}>
                 <Route index element={<FeaturesList />} />
+                <Route path="create-features" element={<CreateFeatures />} />
+                <Route path="edit-features/:featId" element={<EditFeatures />} />
               </Route>
               <Route path="category" element={<Category />}>
                 <Route index element={<CategoryList />} />

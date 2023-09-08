@@ -7,7 +7,7 @@ const router = require("express").Router();
 //CREATE
 
 router.post("/", isAdmin, async (req, res) => {
-  const { name, brand, desc, price, image } = req.body;
+  const { name, brand, desc, price, image, features } = req.body;
 
   try {
     if (image) {
@@ -22,7 +22,9 @@ router.post("/", isAdmin, async (req, res) => {
           desc,
           price,
           image: uploadedResponse,
+          features: Array.isArray(features) ? features : [features],
         });
+        // console.log(product);
 
         const savedProduct = await product.save();
         res.status(200).send(savedProduct);

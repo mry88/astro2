@@ -7,12 +7,14 @@ import { productsCreate } from "../../slices/productsSlice";
 const CreateProduct = () => {
   const dispatch = useDispatch();
   const { createStatus } = useSelector((state) => state.products);
+  const { items } = useSelector((state) => state.features);
 
   const [productImg, setProductImg] = useState("");
   const [brand, setBrand] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [desc, setDesc] = useState("");
+  const [features, setFeatures] = useState("");
 
   const handleProductImageUpload = (e) => {
     const file = e.target.files[0];
@@ -43,6 +45,7 @@ const CreateProduct = () => {
         price,
         desc,
         image: productImg,
+        features: Array.isArray(features) ? features : [features],
       })
     );
   };
@@ -83,7 +86,11 @@ const CreateProduct = () => {
           onChange={(e) => setDesc(e.target.value)}
           required
         />
-
+        <select onChange={(e) => setFeatures(e.target.value)} required>
+          {items.map((item) => (
+            <option key={item.id} value={item._id}>{item.name}</option>
+          ))}
+        </select>
         <PrimaryButton type="submit">
           {createStatus === "pending" ? "Submitting" : "Submit"}
         </PrimaryButton>

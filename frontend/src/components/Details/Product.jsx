@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { url } from "../../slices/api";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../slices/cartSlice";
 
 const Product = () => {
@@ -43,18 +43,19 @@ const Product = () => {
   }, [params.id]);
 
   const handleAddToCart = (product, selectedFeatures) => {
-    const productWithFeatures = {
-      ...product,
-      selectedFeatures: selectedFeatures
-    };
     let selectedFeaturePrice = 0;
     selectedFeatures.forEach(featureName => {
-      selectedFeaturePrice += product.features.price;
-      // const feature = product.features.find(f => f.name === featureName);
-      // if (feature) {
-      //   selectedFeaturePrice += feature.price;
-      // }
+      const feature = product.features.find(f => f.name === featureName);
+      if (feature) {
+        selectedFeaturePrice += parseFloat(feature.price);
+      }
     });
+    console.log(selectedFeaturePrice);
+    const productWithFeatures = {
+      ...product,
+      selectedFeatures: selectedFeatures,
+      selectedFeaturePrice: selectedFeaturePrice,
+    };
     dispatch(addToCart(productWithFeatures));
     navigate("/cart");
   };
@@ -69,6 +70,26 @@ const Product = () => {
       setSelectedFeatures(prevFeatures => prevFeatures.filter(fn => fn !== featureName));
     }
   };
+
+  // const handleFeatureChange = (e, featureName, featurePrice) => {
+  //   const isChecked = e.target.checked;
+    
+  //   setSelectedFeatures((prevFeatures) => {
+  //     if (isChecked) {
+  //       return [...prevFeatures, featureName];
+  //     } else {
+  //       return prevFeatures.filter((fn) => fn !== featureName);
+  //     }
+  //   });
+  
+  //   setSelectedFeaturePrice((prevPrice) => {
+  //     if (isChecked) {
+  //       return prevPrice + featurePrice;
+  //     } else {
+  //       return prevPrice - featurePrice;
+  //     }
+  //   });
+  // };
 
   return (
     <StyledProduct>
@@ -98,7 +119,7 @@ const Product = () => {
           <div><h3>Add Feature :</h3></div>
           {product.features.map((feature) => (
             <label>
-              <input type="checkbox" name={feature.name} value={feature.price} onChange={(e) => handleFeatureChange(e, feature.name, feature.Price)} />
+              <input type="checkbox" name={feature.name} value={feature.price} onChange={(e) => handleFeatureChange(e, feature.name, feature.price)} />
               {feature.name} (Rp.{feature.price})
             </label>
           ))}

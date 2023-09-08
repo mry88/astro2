@@ -24,12 +24,14 @@ const cartSlice = createSlice({
 
       const featurePrice = product.selectedFeatures.reduce((sum, featureName) => {
         const feature = product.features.find(f => f.name === featureName);
-        return sum + (feature ? feature.price : 0);
+        return sum + parseFloat((feature ? feature.price : 0));
       }, 0);
 
       console.log('product price : ', product.price);
 
       const productTotalPrice = product.price + featurePrice;
+
+      console.log('product feature price : ', featurePrice);
 
       if (existingIndex >= 0) {
         state.cartItems[existingIndex] = {
@@ -109,7 +111,7 @@ const cartSlice = createSlice({
             const featuresTotal = selectedFeatures.reduce((totalFeaturePrice, featureName) => {
               const feature = cartItem.features.find(f => f.name === featureName);
               if (feature) {
-                totalFeaturePrice += feature.price;
+                totalFeaturePrice += parseFloat(feature.price);
               }
               return totalFeaturePrice;
             }, 0);
@@ -120,7 +122,6 @@ const cartSlice = createSlice({
 
           cartTotal.total += itemTotal;
           cartTotal.quantity += cartQuantity;
-
           return cartTotal;
         },
         {

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { featureDelete } from "../../../slices/featuresSlice";
+import EditFeatures from "../EditFeatures";
 //import EditFeature from "../EditFeature";
 
 export default function FeaturesList() {
@@ -41,8 +42,8 @@ export default function FeaturesList() {
       renderCell: (params) => {
         return (
           <Actions>
-            {/* <Delete onClick={() => handleDelete(params.row.id)}>Delete</Delete>
-            <EditFeature prodId={params.row.id} /> */}
+            {/* <Delete onClick={() => handleDelete(params.row.id)}>Delete</Delete> */}
+            <EditFeatures featId={params.row.id} />
             <View onClick={() => navigate(`/feature/${params.row.id}`)}>
               View
             </View>
