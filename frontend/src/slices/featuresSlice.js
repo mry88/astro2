@@ -5,11 +5,32 @@ import { toast } from 'react-toastify';
 
 const initialState = {
   items: [],
+  items2: [],
   status: null,
   createStatus: null,
   editStatus: null,
   deleteStatus: null,
 };
+
+export const featuresCreate = createAsyncThunk(
+  "features/featuresCreate",
+  async (values) => {
+    try {
+      const response = await axios.post(
+        `${url}/features`,
+        values,
+        setHeaders()
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data, {
+        position: "bottom-left",
+      });
+    }
+  }
+);
 
 export const featuresFetch = createAsyncThunk(
   "features/featuresFetch",
@@ -44,6 +65,25 @@ export const featuresEdit = createAsyncThunk(
   }
 );
 
+export const featuresDelete = createAsyncThunk(
+  "features/featuresDelete",
+  async (id) => {
+    try {
+      const response = await axios.delete(
+        `${url}/features/${id}`,
+        setHeaders()
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error.response.data);
+      toast.error(error.response?.data, {
+        position: "bottom-left",
+      });
+    }
+  }
+);
+
 const featuresSlice = createSlice({
   name: "features",
   initialState,
@@ -54,56 +94,57 @@ const featuresSlice = createSlice({
     },
     [featuresFetch.fulfilled]: (state, action) => {
       state.items = action.payload;
+      state.items2 = action.payload;
       state.status = "success";
     },
     [featuresFetch.rejected]: (state, action) => {
       state.status = "rejected";
     },
-    //   [productsCreate.pending]: (state, action) => {
-    //     state.createStatus = "pending";
-    //   },
-    //   [productsCreate.fulfilled]: (state, action) => {
-    //     state.items.push(action.payload);
-    //     state.createStatus = "success";
-    //     toast.success("Product Created!", {
-    //       position: "bottom-left",
-    //     });
-    //   },
-    //   [productsCreate.rejected]: (state, action) => {
-    //     state.createStatus = "rejected";
-    //   },
-    //   [productDelete.pending]: (state, action) => {
-    //     state.deleteStatus = "pending";
-    //   },
-    //   [productDelete.fulfilled]: (state, action) => {
-    //     const newList = state.items.filter(
-    //       (item) => item._id !== action.payload._id
-    //     );
-    //     state.items = newList;
-    //     state.deleteStatus = "success";
-    //     toast.error("Product Deleted!", {
-    //       position: "bottom-left",
-    //     });
-    //   },
-    //   [productDelete.rejected]: (state, action) => {
-    //     state.deleteStatus = "rejected";
-    //   },
-    //   [productsEdit.pending]: (state, action) => {
-    //     state.editStatus = "pending";
-    //   },
-    //   [productsEdit.fulfilled]: (state, action) => {
-    //     const updatedProducts = state.items.map((product) =>
-    //       product._id === action.payload._id ? action.payload : product
-    //     );
-    //     state.items = updatedProducts;
-    //     state.editStatus = "success";
-    //     toast.info("Product Edited", {
-    //       position: "bottom-left",
-    //     });
-    //   },
-    //   [productsEdit.rejected]: (state, action) => {
-    //     state.editStatus = "rejected";
-    //   },
+    [featuresCreate.pending]: (state, action) => {
+      state.createStatus = "pending";
+    },
+    [featuresCreate.fulfilled]: (state, action) => {
+      state.items.push(action.payload);
+      state.createStatus = "success";
+      toast.success("Feature Created!", {
+        position: "bottom-left",
+      });
+    },
+    [featuresCreate.rejected]: (state, action) => {
+      state.createStatus = "rejected";
+    },
+    [featuresDelete.pending]: (state, action) => {
+      state.deleteStatus = "pending";
+    },
+    [featuresDelete.fulfilled]: (state, action) => {
+      const newList = state.items.filter(
+        (item) => item._id !== action.payload._id
+      );
+      state.items = newList;
+      state.deleteStatus = "success";
+      toast.error("Feature Deleted!", {
+        position: "bottom-left",
+      });
+    },
+    [featuresDelete.rejected]: (state, action) => {
+      state.deleteStatus = "rejected";
+    },
+    [featuresEdit.pending]: (state, action) => {
+      state.editStatus = "pending";
+    },
+    [featuresEdit.fulfilled]: (state, action) => {
+      const updatedFeatures = state.items.map((features) =>
+        features._id === action.payload._id ? action.payload : features
+      );
+      state.items = updatedFeatures;
+      state.editStatus = "success";
+      toast.info("Feature Edited", {
+        position: "bottom-left",
+      });
+    },
+    [featuresEdit.rejected]: (state, action) => {
+      state.editStatus = "rejected";
+    },
   },
 });
 

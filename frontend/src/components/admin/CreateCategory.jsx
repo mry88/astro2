@@ -3,35 +3,32 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { PrimaryButton } from "./CommonStyled";
 import { url, setHeaders } from "../../slices/api";
-import { featuresCreate } from "../../slices/featuresSlice";
+import { categoryCreate } from "../../slices/categorySlice";
 
-const CreateFeatures = () => {
+const CreateCategory = () => {
     const dispatch = useDispatch();
-    const { createStatus } = useSelector((state) => state.features);
+    const { createStatus } = useSelector((state) => state.category);
 
     const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
-    const [description, setDesc] = useState("");
+    const [desc, setDesc] = useState("");
 
-    const handleCreateFeature = async (e) => {
+    const handleCreateCategory = async (e) => {
         e.preventDefault();
 
-        dispatch(featuresCreate({
+        dispatch(categoryCreate({
             name,
-            description,
-            price,
+            desc,
         }));
         setName("");
         setDesc("");
-        setPrice("");
     };
 
     return (
-        <StyledCreateFeatures>
-            <StyledForm onSubmit={handleCreateFeature}>
-                <h3>Create a Feature</h3>
+        <StyledCreateCategory>
+            <StyledForm onSubmit={handleCreateCategory}>
+                <h3>Create a Category</h3>
                 <CreateForm>
-                    <h5>Nama Fitur :</h5>
+                    <h5>Nama category :</h5>
                     <input
                         type="text"
                         placeholder="Name"
@@ -39,19 +36,11 @@ const CreateFeatures = () => {
                         onChange={(e) => setName(e.target.value)}
                         required
                     />
-                    <h5>Harga Fitur :</h5>
-                    <input
-                        type="number"
-                        placeholder="Price"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        required
-                    />
-                    <h5>Deskripsi Fitur :</h5>
+                    <h5>Deskripsi Category :</h5>
                     <input
                         type="text"
                         placeholder="Short Description"
-                        value={description}
+                        value={desc}
                         onChange={(e) => setDesc(e.target.value)}
                         required
                     />
@@ -60,11 +49,11 @@ const CreateFeatures = () => {
                     {createStatus === "pending" ? "Submitting" : "Submit"}
                 </PrimaryButton>
             </StyledForm>
-        </StyledCreateFeatures>
+        </StyledCreateCategory>
     );
 };
 
-export default CreateFeatures;
+export default CreateCategory;
 
 const StyledForm = styled.form`
   display: flex;
@@ -91,7 +80,7 @@ const StyledForm = styled.form`
   }
 `;
 
-const StyledCreateFeatures = styled.div`
+const StyledCreateCategory = styled.div`
   display: flex;
   justify-content: space-between;
 `;

@@ -4,6 +4,7 @@ const cloudinary = require("../utils/cloudinary");
 
 const router = require("express").Router();
 
+//GET FEATURE
 router.get("/", async (req, res) => {
   const fn = req.query.name;
   try {
@@ -23,7 +24,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Create a new feature item
+// CREATE FEATURE
 router.post("/", async (req, res) => {
   try {
     // Extract the data for the new feature item from the request body
@@ -47,31 +48,53 @@ router.post("/", async (req, res) => {
   }
 });
 
+//EDIT FEATURE
 router.put("/:id", async (req, res) => {
   try {
-      // Extract the data for the updated feature item from the request body
-      const { name, description, price } = req.body;
-
-      // Find the feature item by ID
-      const feature = await Feature.findById(req.params.id);
-
-      if (!feature) {
-          return res.status(404).json({ message: "Feature not found" });
-      }
-
-      // Update the feature item properties
-      feature.name = name;
-      feature.description = description;
-      feature.price = price;
-
-      // Save the updated feature to the database
-      const updatedFeature = await feature.save();
-
-      // Respond with the updated feature
+      const updatedFeature = await Feature.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body.features
+        },
+        { new: true }
+        );
       res.status(200).json(updatedFeature);
   } catch (error) {
       console.error("Error updating feature:", error);
       res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+//DELETE FEATURE
+router.delete("/:id", async (req, res) => {
+  try {
+    const deleteFeature = await Feature.findByIdAndDelete(req.params.id);
+    res.status(200).send(deleteFeature);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// GET FEATURE NAMES BY IDS
+router.post("/names", async (req, res) => {
+  try {
+    // Extract the array of feature IDs from the request body
+    const featureIds = req.body.featureIds;
+
+    // Find features by their IDs and select only the 'name' field
+    const featureNames = await Feature.find(
+      { _id: { $in: featureIds } },
+      "name"
+    );
+
+    // Extract the names from the result
+    const names = featureNames.map((feature) => feature.name);
+
+    // Respond with the feature names
+    res.status(200).json(names);
+  } catch (error) {
+    console.error("Error fetching feature names:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

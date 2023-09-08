@@ -1,21 +1,15 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import { AdminHeaders, PrimaryButton } from "./CommonStyled";
+import { Outlet } from "react-router-dom";
+import { AdminHeaders } from "./CommonStyled";
 
 const Products = () => {
-  const navigate = useNavigate();
 
   return (
-    <>
+    <div>
       <AdminHeaders>
         <h2>Products</h2>
-        <PrimaryButton
-          onClick={() => navigate("/admin/products/create-product")}
-        >
-          Create
-        </PrimaryButton>
       </AdminHeaders>
       <Outlet />
-    </>
+    </div>
   );
 };
 

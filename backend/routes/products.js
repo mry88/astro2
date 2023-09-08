@@ -22,7 +22,7 @@ router.post("/", isAdmin, async (req, res) => {
           desc,
           price,
           image: uploadedResponse,
-          features: Array.isArray(features) ? features : [features],
+          features: features,
         });
         // console.log(product);
 
@@ -38,7 +38,7 @@ router.post("/", isAdmin, async (req, res) => {
 
 //DELETE
 
-router.delete("/:id", isAdmin, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 

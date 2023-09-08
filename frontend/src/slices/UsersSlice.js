@@ -7,6 +7,7 @@ const initialState = {
   list: [],
   status: null,
   deleteStatus: null,
+  editStatus: null,
 };
 
 export const usersFetch = createAsyncThunk("users/usersFetch", async () => {
@@ -31,6 +32,26 @@ export const userDelete = createAsyncThunk("users/userDelete", async (id) => {
     });
   }
 });
+
+export const userEdit = createAsyncThunk(
+  "users/userEdit",
+  async (values) => {
+    try {
+      const response = await axios.put(
+        `${url}/users/${values.user._id}`,
+        values,
+        setHeaders()
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data, {
+        position: "bottom-left",
+      });
+    }
+  }
+);
 
 const usersSlice = createSlice({
   name: "users",
@@ -62,6 +83,22 @@ const usersSlice = createSlice({
     },
     [userDelete.rejected]: (state, action) => {
       state.deleteStatus = "rejected";
+    },
+    [userEdit.pending]: (state, action) => {
+      state.editStatus = "pending";
+    },
+    [userEdit.fulfilled]: (state, action) => {
+      const updatedUser = state.list.map((user) =>
+        user._id === action.payload._id ? action.payload : user
+      );
+      state.list = updatedUser;
+      state.editStatus = "success";
+      toast.info("User Role Edited", {
+        position: "bottom-left",
+      });
+    },
+    [userEdit.rejected]: (state, action) => {
+      state.editStatus = "rejected";
     },
   },
 });

@@ -4,12 +4,13 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { categoryDelete } from "../../../slices/featuresSlice";
+import { PrimaryButton } from "../CommonStyled";
 //import EditCategory from "../EditFeature";
 
 export default function CategoryList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {items} = useSelector((state) => state.category);
+  const { items } = useSelector((state) => state.category);
   console.log(items);
 
   const rows =
@@ -33,25 +34,26 @@ export default function CategoryList() {
       headerName: "Actions",
       width: 170,
       renderCell: (params) => {
+        const catId = params.row.id;
         return (
           <Actions>
-            {/* <Delete onClick={() => handleDelete(params.row.id)}>Delete</Delete>
-            <EditFeature prodId={params.row.id} /> */}
-            <View onClick={() => navigate(`/category/${params.row.id}`)}>
-              View
-            </View>
+            <Edit onClick={() => navigate(`edit-category/${catId}`)}>Edit</Edit>
+            <Delete onClick={() => navigate(`delete-category/${catId}`)}>Delete</Delete>
           </Actions>
         );
       },
     },
   ];
 
-//   const handleDelete = (id) => {
-//     dispatch(featureDelete(id));
-//   };
+  //   const handleDelete = (id) => {
+  //     dispatch(featureDelete(id));
+  //   };
 
   return (
     <div style={{ height: 400, width: "100%", marginTop: "2rem" }}>
+      <PrimaryButton onClick={() => navigate("/admin/category/create-category")}>
+        Create
+      </PrimaryButton>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -73,12 +75,11 @@ const ImageContainer = styled.div`
 const Actions = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
 
   button {
     border: none;
     outline: none;
-
+    margin: 5px;
     padding: 3px 5px;
     color: white;
     border-radius: 3px;
@@ -89,6 +90,13 @@ const Actions = styled.div`
 const Delete = styled.button`
   background-color: rgb(255, 77, 73);
 `;
-const View = styled.button`
-  background-color: rgb(114, 225, 40);
+const Edit = styled.button`
+  border: none;
+  outline: none;
+
+  padding: 3px 5px;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #4b70e2;
 `;

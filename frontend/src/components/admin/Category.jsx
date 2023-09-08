@@ -8,11 +8,6 @@ const Category = () => {
     <>
       <AdminHeaders>
         <h2>Category</h2>
-        <PrimaryButton
-          onClick={() => navigate("/admin/category/create-category")}
-        >
-          Create
-        </PrimaryButton>
       </AdminHeaders>
       <Outlet />
     </>

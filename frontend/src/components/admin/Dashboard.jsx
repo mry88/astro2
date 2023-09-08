@@ -12,14 +12,6 @@ const Dashboard = () => {
     <StyledDashboard>
       <SideNav>
         <h3>Quick Links</h3>
-        {/* <NavLink
-          className={({ isActive }) =>
-            isActive ? "link-active" : "link-inactive"
-          }
-          to="/admin/summary"
-        >
-          <FaTachometerAlt /> Summary
-        </NavLink> */}
         <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"

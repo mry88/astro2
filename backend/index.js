@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("./models/features");
 require("./models/category");
+require("./models/product");
 const register = require("./routes/register");
 const login = require("./routes/login");
 const orders = require("./routes/orders");
@@ -11,8 +12,6 @@ const users = require("./routes/users");
 const productsRoute = require("./routes/products");
 const featuresRoute = require("./routes/features");
 const categoryRoute = require("./routes/category");
-
-const products = require("./products");
 const { Product } = require("./models/product");
 const { Feature } = require("./models/features");
 const { Category } = require("./models/category");
@@ -21,7 +20,6 @@ const app = express();
 
 require("dotenv").config();
 
-app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -30,6 +28,8 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
+
+app.use(express.json({ limit: '50mb' }));
 
 app.use("/api/register", register);
 app.use("/api/login", login);

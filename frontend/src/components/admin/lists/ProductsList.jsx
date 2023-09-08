@@ -4,27 +4,58 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { productDelete } from "../../../slices/productsSlice";
-import EditProduct from "../EditProduct";
+import { PrimaryButton } from "../CommonStyled";
+import { setHeaders, url } from "../../../slices/api";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export default function ProductsList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.products);
+  const [row, setRow] = useState([]);
 
-  const rows =
-    items &&
-    items.map((item) => {
-      console.log(item.image);
-      console.log(item.features);
-      return {
-        id: item._id,
-        imageUrl: item.image,
-        pName: item.name,
-        pDesc: item.desc,
-        price: item.price.toLocaleString(),
-        feature: item.features,
-      };
-    });
+  const fetchAllFeatureNames = async () => {
+    try {
+      const allRows = await Promise.all(
+        items.map(async (item) => {
+          const response = await fetch(`${url}/features/names`, {
+            method: "POST",
+            headers: {
+              ...setHeaders(),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ featureIds: item.features }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const featureNames = data.map((feature) => feature).join(", ");
+            return {
+              id: item._id,
+              imageUrl: item.image.url,
+              pName: item.name,
+              pDesc: item.desc,
+              price: item.price.toLocaleString(),
+              feature: featureNames,
+            };
+          } else {
+            console.error("Error fetching feature names:", response.statusText);
+            return null;
+          }
+        })
+      );
+
+      // Filter out any null values (failed requests) and update the rows state
+      setRow(allRows.filter((row) => row !== null));
+    } catch (error) {
+      console.error("Error fetching feature names:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllFeatureNames();
+  }, [items]);
 
   const columns = [
     { field: "id", headerName: "ID", width: 220 },
@@ -53,11 +84,12 @@ export default function ProductsList() {
       headerName: "Actions",
       width: 170,
       renderCell: (params) => {
+        const prodId = params.row.id;
         return (
           <Actions>
-            <Delete onClick={() => handleDelete(params.row.id)}>Delete</Delete>
-            <EditProduct prodId={params.row.id} />
-            <View onClick={() => navigate(`/product/${params.row.id}`)}>
+            <Edit onClick={() => navigate(`edit-product/${prodId}`)}>Edit</Edit>
+            <Delete onClick={() => navigate(`delete-product/${prodId}`)}>Delete</Delete>
+            <View onClick={() => navigate(`/product/${prodId}`)}>
               View
             </View>
           </Actions>
@@ -66,14 +98,13 @@ export default function ProductsList() {
     },
   ];
 
-  const handleDelete = (id) => {
-    dispatch(productDelete(id));
-  };
-
   return (
     <div style={{ height: 400, width: "100%", marginTop: "2rem" }}>
+      <PrimaryButton onClick={() => navigate("/admin/products/create-product")}>
+        Create
+      </PrimaryButton>
       <DataGrid
-        rows={rows}
+        rows={row}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
@@ -83,6 +114,17 @@ export default function ProductsList() {
     </div>
   );
 }
+
+const Edit = styled.button`
+  border: none;
+  outline: none;
+
+  padding: 3px 5px;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #4b70e2;
+`;
 
 const ImageContainer = styled.div`
   img {

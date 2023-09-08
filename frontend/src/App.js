@@ -19,7 +19,6 @@ import Products from "./components/admin/Products";
 import Users from "./components/admin/Users";
 import Orders from "./components/admin/Oders";
 import Summary from "./components/admin/Summary";
-import CreateProduct from "./components/admin/CreateProduct";
 import ProductsList from "./components/admin/lists/ProductsList";
 import Product from "./components/Details/Product";
 import UserProfile from "./components/Details/UserProfile";
@@ -30,6 +29,15 @@ import Category from "./components/admin/Category";
 import CategoryList from "./components/admin/lists/CategoryList";
 import CreateFeatures from "./components/admin/CreateFeatures";
 import EditFeatures from "./components/admin/EditFeatures";
+import DeleteFeatures from "./components/admin/DeleteFeatures";
+import CreateProduct from "./components/admin/CreateProduct";
+import DeleteProduct from "./components/admin/DeleteProduct";
+import EditProducts from "./components/admin/EditProducts";
+import EditUsers from "./components/admin/EditUsers";
+import UsersList from "./components/admin/lists/UsersList";
+import CreateCategory from "./components/admin/CreateCategory";
+import EditCategory from "./components/admin/EditCategory";
+import DeleteCategory from "./components/admin/DeleteCategory";
 
 function App() {
   const dispatch = useDispatch();
@@ -58,16 +66,25 @@ function App() {
               <Route path="products" element={<Products />}>
                 <Route index element={<ProductsList />} />
                 <Route path="create-product" element={<CreateProduct />} />
+                <Route path="edit-product/:prodId" element={<EditProducts />} />
+                <Route path="delete-product/:prodId" element={<DeleteProduct />} />
               </Route>
               <Route path="features" element={<Features />}>
                 <Route index element={<FeaturesList />} />
                 <Route path="create-features" element={<CreateFeatures />} />
                 <Route path="edit-features/:featId" element={<EditFeatures />} />
+                <Route path="delete-features/:featId" element={<DeleteFeatures />} />
+              </Route>
+              <Route path="users" element={<Users />} >
+                <Route index element={<UsersList />} />
+                <Route path="edit-user/:usrId" element={<EditUsers />} />
               </Route>
               <Route path="category" element={<Category />}>
                 <Route index element={<CategoryList />} />
+                <Route path="create-category" element={<CreateCategory />} />
+                <Route path="edit-category/:catId" element={<EditCategory />} />
+                <Route path="delete-category/:catId" element={<DeleteCategory />} />
               </Route>
-              <Route path="users" element={<Users />} />
               <Route path="orders" element={<Orders />} />
             </Route>
             <Route path="*" element={<NotFound />} />

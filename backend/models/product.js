@@ -12,7 +12,10 @@ const productSchema = new mongoose.Schema(
       ref: 'Feature',
     }],
   },
-  { timestamps: true }
+  {
+    timestamps: false,
+    versionKey: false,
+  }
 );
 
 const Product = mongoose.model("Product", productSchema);

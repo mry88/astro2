@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { PrimaryButton } from "./CommonStyled";
 import { productsCreate } from "../../slices/productsSlice";
+import { setHeaders, url } from "../../slices/api";
 
 const CreateProduct = () => {
   const dispatch = useDispatch();
   const { createStatus } = useSelector((state) => state.products);
   const { items } = useSelector((state) => state.features);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const [productImg, setProductImg] = useState("");
   const [brand, setBrand] = useState("");
@@ -18,7 +20,7 @@ const CreateProduct = () => {
 
   const handleProductImageUpload = (e) => {
     const file = e.target.files[0];
-
+    console.log(file);
     TransformFileData(file);
   };
 
@@ -27,11 +29,31 @@ const CreateProduct = () => {
 
     if (file) {
       reader.readAsDataURL(file);
+
+      // reader.onloadstart = () => {
+      //   console.log("FileReader started reading.");
+      // };
+
       reader.onloadend = () => {
-        setProductImg(reader.result);
+        if (reader.result) {
+          setProductImg(reader.result);
+        } else {
+          console.error("Failed to read the file.");
+        }
+        // setProductImg(reader.result);
+        // console.log(productImg);
       };
     } else {
       setProductImg("");
+    }
+  };
+
+  const handleFeatureSelection = (e) => {
+    const selectedFeatureId = e.target.value;
+    if (e.target.checked) {
+      setSelectedFeatures([...selectedFeatures, selectedFeatureId]);
+    } else {
+      setSelectedFeatures(selectedFeatures.filter((id) => id !== selectedFeatureId));
     }
   };
 
@@ -45,15 +67,20 @@ const CreateProduct = () => {
         price,
         desc,
         image: productImg,
-        features: Array.isArray(features) ? features : [features],
+        features: selectedFeatures,
       })
     );
+    setName("");
+    setBrand("");
+    setDesc("");
+    setPrice("");
   };
 
   return (
     <StyledCreateProduct>
       <StyledForm onSubmit={handleSubmit}>
         <h3>Create a Product</h3>
+        <h5>Upload Image :</h5>
         <input
           id="imgUpload"
           accept="image/*"
@@ -61,6 +88,7 @@ const CreateProduct = () => {
           onChange={handleProductImageUpload}
           required
         />
+        <h5>Select Category :</h5>
         <select onChange={(e) => setBrand(e.target.value)} required>
           <option value="">Select Brand</option>
           <option value="iphone">iPhone</option>
@@ -68,29 +96,46 @@ const CreateProduct = () => {
           <option value="xiomi">Xiomi</option>
           <option value="other">Other</option>
         </select>
+        <h5>Product Name :</h5>
         <input
           type="text"
           placeholder="Name"
           onChange={(e) => setName(e.target.value)}
           required
         />
+        <h5>Product Price :</h5>
         <input
           type="number"
           placeholder="Price"
           onChange={(e) => setPrice(e.target.value)}
           required
         />
+        <h5>Description :</h5>
         <input
           type="text"
           placeholder="Short Description"
           onChange={(e) => setDesc(e.target.value)}
           required
         />
-        <select onChange={(e) => setFeatures(e.target.value)} required>
-          {items.map((item) => (
-            <option key={item.id} value={item._id}>{item.name}</option>
-          ))}
-        </select>
+        <h5>Select Features :</h5>
+        <table>
+          <tbody>
+            {items.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    value={item._id}
+                    checked={selectedFeatures.includes(item._id)}
+                    onChange={handleFeatureSelection}
+                  />
+                </td>
+                <td>{item.name}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
         <PrimaryButton type="submit">
           {createStatus === "pending" ? "Submitting" : "Submit"}
         </PrimaryButton>
@@ -101,7 +146,7 @@ const CreateProduct = () => {
             <img src={productImg} alt="error!" />
           </>
         ) : (
-          <p>Product image upload preview will appear here!</p>
+          <p>Gambar Produk</p>
         )}
       </ImagePreview>
     </StyledCreateProduct>
@@ -137,7 +182,7 @@ const StyledForm = styled.form`
 
 const StyledCreateProduct = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
 `;
 
 const ImagePreview = styled.div`
@@ -146,6 +191,7 @@ const ImagePreview = styled.div`
   border: 1px solid rgb(183, 183, 183);
   max-width: 300px;
   width: 100%;
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -155,4 +201,8 @@ const ImagePreview = styled.div`
   img {
     max-width: 100%;
   }
+`;
+
+const FormCreate = styled.div`
+  margin-top: 10px;
 `;

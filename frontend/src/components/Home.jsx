@@ -27,7 +27,7 @@ const Home = () => {
                 <div key={product._id} className="product">
                   <h3>{product.name}</h3>
                   <Link to={"/product/" + product._id}>
-                    <img src={product.image} alt={product.name} />
+                    <img src={product.image.url} alt={product.name} />
                   </Link>
                   <div className="details">
                     <span>{product.desc}</span>

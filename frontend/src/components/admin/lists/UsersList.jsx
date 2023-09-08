@@ -48,10 +48,12 @@ export default function UsersList() {
     {
       field: "actions",
       headerName: "Actions",
-      width: 120,
+      width: 150,
       renderCell: (params) => {
+        const usrId = params.row.id;
         return (
           <Actions>
+            <Edit onClick={() => navigate(`edit-user/${usrId}`)}>Edit Role</Edit>
             {/* <Delete onClick={() => handleDelete(params.row.id)}>Delete</Delete> */}
             <View onClick={() => navigate(`/user/${params.row.id}`)}>View</View>
           </Actions>
@@ -81,17 +83,27 @@ export default function UsersList() {
 const Actions = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
 
   button {
     border: none;
     outline: none;
-
+    margin: 5px;
     padding: 3px 5px;
     color: white;
     border-radius: 3px;
     cursor: pointer;
   }
+`;
+
+const Edit = styled.button`
+  border: none;
+  outline: none;
+
+  padding: 3px 5px;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #4b70e2;
 `;
 
 const Delete = styled.button`

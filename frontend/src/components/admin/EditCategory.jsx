@@ -11,52 +11,46 @@ import styled from "styled-components";
 import { PrimaryButton } from "./CommonStyled";
 import { useEffect } from "react";
 import { setHeaders, url } from "../../slices/api";
-import { featuresEdit } from "../../slices/featuresSlice";
+import { categoryEdit } from "../../slices/categorySlice";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function EditFeatures() {
+export default function EditCategory() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { items } = useSelector((state) => state.features);
-    const { editStatus } = useSelector((state) => state.features);
+    const { items } = useSelector((state) => state.category);
+    const { editStatus } = useSelector((state) => state.category);
     const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
-    const [description, setDesc] = useState("");
-    const [currentFeat, setCurrentFeat] = useState({});
-    const { featId } = useParams();
-
-    //let selectedFeat = items.filter((item) => item._id === featId);
-    //selectedFeat = selectedFeat[0];
+    const [desc, setDesc] = useState("");
+    const [currentCat, setCurrentCat] = useState({});
+    const { catId } = useParams();
 
     useEffect(() => {
-        // Fetch the selected feature item by ID
-        const selectedFeature = items.find((item) => item._id === featId);
-        if (selectedFeature) {
-            setCurrentFeat(selectedFeature);
-            setName(selectedFeature.name);
-            setPrice(selectedFeature.price);
-            setDesc(selectedFeature.description);
+        // Fetch the selected category item by ID
+        const selectedCategory = items.find((item) => item._id === catId);
+        if (selectedCategory) {
+            setCurrentCat(selectedCategory);
+            setName(selectedCategory.name);
+            setDesc(selectedCategory.desc);
         }
     }, []);
 
-    const handleUpdateFeature = async (e) => {
+    const handleUpdateCategory = async (e) => {
         e.preventDefault();
-        dispatch(featuresEdit({
-            features: {
-                ...currentFeat,
+        dispatch(categoryEdit({
+            category: {
+                ...currentCat,
                 name: name,
-                description: description,
-                price: price,
+                description: desc,
             }
         }));
     };
 
     return (
         <div>
-            <StyledEditFeatures>
-                <StyledForm onSubmit={handleUpdateFeature}>
-                    <h3>Edit Feature</h3>
-                    <h5>Nama Fitur :</h5>
+            <StyledEditCategory>
+                <StyledForm onSubmit={handleUpdateCategory}>
+                    <h3>Edit Category</h3>
+                    <h5>Nama Category :</h5>
                     <input
                         type="text"
                         placeholder="Name"
@@ -64,19 +58,11 @@ export default function EditFeatures() {
                         onChange={(e) => setName(e.target.value)}
                         required
                     />
-                    <h5>Harga Fitur :</h5>
-                    <input
-                        type="number"
-                        placeholder="Price"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        required
-                    />
-                    <h5>Deskripsi Fitur :</h5>
+                    <h5>Deskripsi Category :</h5>
                     <input
                         type="text"
                         placeholder="Short Description"
-                        value={description}
+                        value={desc}
                         onChange={(e) => setDesc(e.target.value)}
                         required
                     />
@@ -84,7 +70,7 @@ export default function EditFeatures() {
                         {editStatus === "pending" ? "Submitting" : "Submit"}
                     </PrimaryButton>
                 </StyledForm>
-            </StyledEditFeatures>
+            </StyledEditCategory>
         </div>
     );
 }
@@ -125,7 +111,7 @@ const StyledForm = styled.form`
   }
 `;
 
-const StyledEditFeatures = styled.div`
+const StyledEditCategory = styled.div`
   display: flex;
   justify-content: space-between;
 `;

@@ -100,7 +100,7 @@ const Product = () => {
           ) : (
             <>
               <ImageContainer>
-                <img src={product.image} alt="product" />
+                <img src={product.image?.url} alt="product" />
               </ImageContainer>
               <ProductDetails>
                 <h3>{product.name}</h3>

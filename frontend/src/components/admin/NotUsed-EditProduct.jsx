@@ -10,10 +10,13 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { PrimaryButton } from "./CommonStyled";
 import { productsEdit } from "../../slices/productsSlice";
+import { useEffect } from "react";
 
 export default function EditProduct({ prodId }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { items } = useSelector((state) => state.products);
+  const { items2 } = useSelector((state) => state.features);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const dispatch = useDispatch();
   const { editStatus } = useSelector((state) => state.products);
@@ -26,6 +29,15 @@ export default function EditProduct({ prodId }) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [desc, setDesc] = useState("");
+
+  const handleCheckboxChange = (e) => {
+    const selectedFeatureId = e.target.value;
+    if (e.target.checked) {
+      setSelectedFeatures([...selectedFeatures, selectedFeatureId]);
+    } else {
+      setSelectedFeatures(selectedFeatures.filter((id) => id !== selectedFeatureId));
+    }
+  };
 
   const handleProductImageUpload = (e) => {
     const file = e.target.files[0];
@@ -59,6 +71,7 @@ export default function EditProduct({ prodId }) {
           brand: brand,
           price: price,
           desc: desc,
+          features: selectedFeatures,
         },
       })
     );
@@ -67,9 +80,13 @@ export default function EditProduct({ prodId }) {
   const handleClickOpen = () => {
     setOpen(true);
 
-    let selectedProd = items.filter((item) => item._id === prodId);
+    const initialSelectedFeatures = [];
+    let selectedProd = items.find((item) => item._id === prodId);
 
-    selectedProd = selectedProd[0];
+    selectedProd.features.forEach((featureId) => {
+      initialSelectedFeatures.push(featureId);
+    });
+    setSelectedFeatures(initialSelectedFeatures);
 
     setCurrentProd(selectedProd);
     setPreviewImg(selectedProd.image.url);
@@ -98,12 +115,14 @@ export default function EditProduct({ prodId }) {
           <StyledEditProduct>
             <StyledForm onSubmit={handleSubmit}>
               <h3>Create a Product</h3>
+              <h5>Upload Image :</h5>
               <input
                 id="imgUpload"
                 accept="image/*"
                 type="file"
                 onChange={handleProductImageUpload}
               />
+              <h5>Select Category :</h5>
               <select
                 onChange={(e) => setBrand(e.target.value)}
                 value={brand}
@@ -115,6 +134,7 @@ export default function EditProduct({ prodId }) {
                 <option value="xiomi">Xiomi</option>
                 <option value="other">Other</option>
               </select>
+              <h5>Product Name :</h5>
               <input
                 type="text"
                 placeholder="Name"
@@ -122,6 +142,7 @@ export default function EditProduct({ prodId }) {
                 onChange={(e) => setName(e.target.value)}
                 required
               />
+              <h5>Product Price :</h5>
               <input
                 type="number"
                 placeholder="Price"
@@ -129,6 +150,7 @@ export default function EditProduct({ prodId }) {
                 onChange={(e) => setPrice(e.target.value)}
                 required
               />
+              <h5>Description :</h5>
               <input
                 type="text"
                 placeholder="Short Description"
@@ -136,6 +158,24 @@ export default function EditProduct({ prodId }) {
                 onChange={(e) => setDesc(e.target.value)}
                 required
               />
+              <h5>Select Features :</h5>
+              <table>
+                <tbody>
+                  {items2.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          value={item._id}
+                          checked={selectedFeatures.includes(item._id)}
+                          onChange={handleCheckboxChange}
+                        />
+                      </td>
+                      <td>{item.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
               <PrimaryButton type="submit">
                 {editStatus === "pending" ? "Submitting" : "Submit"}
@@ -206,6 +246,7 @@ const ImagePreview = styled.div`
   padding: 2rem;
   border: 1px solid rgb(183, 183, 183);
   max-width: 300px;
+  height: 400px;
   width: 100%;
   display: flex;
   align-items: center;
