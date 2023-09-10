@@ -17,6 +17,7 @@ export default function EditProducts() {
     const [open, setOpen] = useState(false);
     const { items } = useSelector((state) => state.products);
     const { items2 } = useSelector((state) => state.features);
+    const { catItems } = useSelector((state) => state.category);
     const [selectedFeatures, setSelectedFeatures] = useState([]);
     const { prodId } = useParams();
 
@@ -27,7 +28,7 @@ export default function EditProducts() {
     const [currentProd, setCurrentProd] = useState({});
 
     const [productImg, setProductImg] = useState("");
-    const [brand, setBrand] = useState("");
+    const [category, setCategory] = useState("");
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [desc, setDesc] = useState("");
@@ -45,7 +46,7 @@ export default function EditProducts() {
         setCurrentProd(selectedProd);
         setPreviewImg(selectedProd.image.url);
         setProductImg("");
-        setBrand(selectedProd.brand);
+        setCategory(selectedProd.category);
         setName(selectedProd.name);
         setPrice(selectedProd.price);
         setDesc(selectedProd.desc);
@@ -89,7 +90,7 @@ export default function EditProducts() {
                 product: {
                     ...currentProd,
                     name: name,
-                    brand: brand,
+                    brand: category,
                     price: price,
                     desc: desc,
                     features: selectedFeatures,
@@ -111,16 +112,12 @@ export default function EditProducts() {
                         onChange={handleProductImageUpload}
                     />
                     <h5>Select Category :</h5>
-                    <select
-                        onChange={(e) => setBrand(e.target.value)}
-                        value={brand}
-                        required
-                    >
-                        <option value="">Select Brand</option>
-                        <option value="iphone">iPhone</option>
-                        <option value="samsung">Samsung</option>
-                        <option value="xiomi">Xiomi</option>
-                        <option value="other">Other</option>
+                    <select onChange={(e) => setCategory(e.target.value)} required>
+                        {catItems.map((item) => (
+                            <option key={item._id} value={item.name}>
+                                {item.name}
+                            </option>
+                        ))}
                     </select>
                     <h5>Product Name :</h5>
                     <input

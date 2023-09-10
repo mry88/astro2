@@ -6,8 +6,8 @@ const router = require("express").Router();
 
 //CREATE
 
-router.post("/", isAdmin, async (req, res) => {
-  const { name, brand, desc, price, image, features } = req.body;
+router.post("/", async (req, res) => {
+  const { name, category, desc, price, image, features, video } = req.body;
 
   try {
     if (image) {
@@ -18,13 +18,14 @@ router.post("/", isAdmin, async (req, res) => {
       if (uploadedResponse) {
         const product = new Product({
           name,
-          brand,
+          category,
           desc,
           price,
           image: uploadedResponse,
           features: features,
+          video,
         });
-        // console.log(product);
+        console.log(product);
 
         const savedProduct = await product.save();
         res.status(200).send(savedProduct);
@@ -112,13 +113,13 @@ router.put("/:id", isAdmin, async (req, res) => {
 //GET ALL PRODUCTS
 
 router.get("/", async (req, res) => {
-  const qbrand = req.query.brand;
+  const qCat = req.query.category;
   try {
     let products;
 
-    if (qbrand) {
+    if (qCat) {
       products = await Product.find({
-        brand: qbrand,
+        category: qCat,
       }).sort({ _id: -1 });
     } else {
       products = await Product.find().sort({ _id: -1 });

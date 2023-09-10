@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 const initialState = {
   items: [],
+  catItems: [],
   status: null,
   createStatus: null,
   editStatus: null,
@@ -93,6 +94,7 @@ const categorySlice = createSlice({
     },
     [categoryFetch.fulfilled]: (state, action) => {
       state.items = action.payload;
+      state.catItems = action.payload;
       state.status = "success";
     },
     [categoryFetch.rejected]: (state, action) => {

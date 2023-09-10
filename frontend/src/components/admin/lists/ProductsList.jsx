@@ -35,6 +35,7 @@ export default function ProductsList() {
               id: item._id,
               imageUrl: item.image.url,
               pName: item.name,
+              pCat: item.category,
               pDesc: item.desc,
               price: item.price.toLocaleString(),
               feature: featureNames,
@@ -58,11 +59,11 @@ export default function ProductsList() {
   }, [items]);
 
   const columns = [
-    { field: "id", headerName: "ID", width: 220 },
+    { field: "id", headerName: "ID", width: 150 },
     {
       field: "imageUrl",
       headerName: "Image",
-      width: 80,
+      width: 100,
       renderCell: (params) => {
         return (
           <ImageContainer>
@@ -71,14 +72,11 @@ export default function ProductsList() {
         );
       },
     },
-    { field: "pName", headerName: "Name", width: 130 },
+    { field: "pName", headerName: "Name", width: 100 },
+    { field: "pCat", headerName: "Category", width: 100 },
     { field: "pDesc", headerName: "Description", width: 130 },
-    {
-      field: "price",
-      headerName: "Price(Rp.)",
-      width: 80,
-    },
-    { field: "feature", headerName: "Features", width: 300 },
+    { field: "price", headerName: "Price(Rp.)", width: 100,},
+    { field: "feature", headerName: "Features", width: 200 },
     {
       field: "actions",
       headerName: "Actions",

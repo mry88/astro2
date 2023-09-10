@@ -9,14 +9,16 @@ const CreateProduct = () => {
   const dispatch = useDispatch();
   const { createStatus } = useSelector((state) => state.products);
   const { items } = useSelector((state) => state.features);
+  const { catItems } = useSelector((state) => state.category);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const [productImg, setProductImg] = useState("");
-  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [desc, setDesc] = useState("");
   const [features, setFeatures] = useState("");
+  const [video, setVideo] = useState("");
 
   const handleProductImageUpload = (e) => {
     const file = e.target.files[0];
@@ -59,19 +61,20 @@ const CreateProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     dispatch(
       productsCreate({
         name,
-        brand,
+        category,
         price,
         desc,
         image: productImg,
         features: selectedFeatures,
+        video,
       })
     );
     setName("");
-    setBrand("");
+    setCategory("");
     setDesc("");
     setPrice("");
   };
@@ -89,12 +92,12 @@ const CreateProduct = () => {
           required
         />
         <h5>Select Category :</h5>
-        <select onChange={(e) => setBrand(e.target.value)} required>
-          <option value="">Select Brand</option>
-          <option value="iphone">iPhone</option>
-          <option value="samsung">Samsung</option>
-          <option value="xiomi">Xiomi</option>
-          <option value="other">Other</option>
+        <select onChange={(e) => setCategory(e.target.value)} required>
+        {catItems.map((item) => (
+          <option key={item._id} value={item.name}>
+            {item.name}
+          </option>
+        ))}
         </select>
         <h5>Product Name :</h5>
         <input
@@ -135,6 +138,13 @@ const CreateProduct = () => {
             ))}
           </tbody>
         </table>
+        <h5>Insert Video Link :</h5>
+        <input
+          type="text"
+          placeholder="Video Link"
+          onChange={(e) => setVideo(e.target.value)}
+          required
+        />
 
         <PrimaryButton type="submit">
           {createStatus === "pending" ? "Submitting" : "Submit"}

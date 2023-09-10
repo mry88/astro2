@@ -18,6 +18,7 @@ const Product = () => {
     desc: '',
     price: 0,
     image: null,
+    video: '',
     features: [],
   });
   const [loading, setLoading] = useState(false);
@@ -73,7 +74,7 @@ const Product = () => {
 
   // const handleFeatureChange = (e, featureName, featurePrice) => {
   //   const isChecked = e.target.checked;
-    
+
   //   setSelectedFeatures((prevFeatures) => {
   //     if (isChecked) {
   //       return [...prevFeatures, featureName];
@@ -81,7 +82,7 @@ const Product = () => {
   //       return prevFeatures.filter((fn) => fn !== featureName);
   //     }
   //   });
-  
+
   //   setSelectedFeaturePrice((prevPrice) => {
   //     if (isChecked) {
   //       return prevPrice + featurePrice;
@@ -105,7 +106,7 @@ const Product = () => {
               <ProductDetails>
                 <h3>{product.name}</h3>
                 <p>
-                  <span>Brand:</span> {product.brand}
+                  <span>Category:</span> {product.category}
                 </p>
                 <p>
                   <span>Description:</span> {product.desc}
@@ -115,6 +116,15 @@ const Product = () => {
             </>
           )}
         </TopContainer>
+        <VideoContainer>
+          <iframe
+            src={product.video}
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="video"
+          />
+        </VideoContainer>
         <BotContainer>
           <div><h3>Add Feature :</h3></div>
           {product.features.map((feature) => (
@@ -190,4 +200,10 @@ const Price = styled.div`
         margin: 1rem 0;
         font-weight: bold;
         font-size: 25px;
+        `;
+
+const VideoContainer = styled.div`
+        display: flex;
+        width: 100%;
+        justify-content: center;
         `;

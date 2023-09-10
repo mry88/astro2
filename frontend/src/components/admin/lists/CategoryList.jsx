@@ -45,10 +45,6 @@ export default function CategoryList() {
     },
   ];
 
-  //   const handleDelete = (id) => {
-  //     dispatch(featureDelete(id));
-  //   };
-
   return (
     <div style={{ height: 400, width: "100%", marginTop: "2rem" }}>
       <PrimaryButton onClick={() => navigate("/admin/category/create-category")}>
