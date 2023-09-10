@@ -13,11 +13,10 @@ const CreateProduct = () => {
   const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const [productImg, setProductImg] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [desc, setDesc] = useState("");
-  const [features, setFeatures] = useState("");
   const [video, setVideo] = useState("");
 
   const handleProductImageUpload = (e) => {
@@ -61,7 +60,7 @@ const CreateProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     dispatch(
       productsCreate({
         name,
@@ -94,7 +93,7 @@ const CreateProduct = () => {
         <h5>Select Category :</h5>
         <select onChange={(e) => setCategory(e.target.value)} required>
         {catItems.map((item) => (
-          <option key={item._id} value={item.name}>
+          <option key={item._id} value={item._id}>
             {item.name}
           </option>
         ))}

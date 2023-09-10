@@ -1,6 +1,7 @@
 const { Feature } = require("../models/features");
 const { auth, isUser, isAdmin } = require("../middleware/auth");
 const cloudinary = require("../utils/cloudinary");
+const { Product } = require("../models/product");
 
 const router = require("express").Router();
 
@@ -50,6 +51,14 @@ router.post("/", async (req, res) => {
 
 //EDIT FEATURE
 router.put("/:id", async (req, res) => {
+  const featuresId = req.params.id;
+
+  const productsWithFeatures = await Product.find({ features: featuresId });
+
+  if (productsWithFeatures.length > 0) {
+    return res.status(400).json({ error: "Features is referenced in products" });
+  }
+  
   try {
       const updatedFeature = await Feature.findByIdAndUpdate(
         req.params.id,
@@ -67,6 +76,14 @@ router.put("/:id", async (req, res) => {
 
 //DELETE FEATURE
 router.delete("/:id", async (req, res) => {
+  const featuresId = req.params.id;
+
+  const productsWithFeatures = await Product.find({ features: featuresId });
+
+  if (productsWithFeatures.length > 0) {
+    return res.status(400).json({ error: "Features is referenced in products" });
+  }
+  
   try {
     const deleteFeature = await Feature.findByIdAndDelete(req.params.id);
     res.status(200).send(deleteFeature);

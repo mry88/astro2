@@ -15,11 +15,11 @@ export default function ProductsList() {
   const { items } = useSelector((state) => state.products);
   const [row, setRow] = useState([]);
 
-  const fetchAllFeatureNames = async () => {
+  const fetchAll = async () => {
     try {
       const allRows = await Promise.all(
         items.map(async (item) => {
-          const response = await fetch(`${url}/features/names`, {
+          const responseFeat = await fetch(`${url}/features/names`, {
             method: "POST",
             headers: {
               ...setHeaders(),
@@ -28,20 +28,33 @@ export default function ProductsList() {
             body: JSON.stringify({ featureIds: item.features }),
           });
 
-          if (response.ok) {
-            const data = await response.json();
-            const featureNames = data.map((feature) => feature).join(", ");
+          const responseCat = await fetch(`${url}/category/names`, {
+            method: "POST",
+            headers: {
+              ...setHeaders(),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ categoryIds: item.category }),
+          });
+
+          if (responseFeat.ok && responseCat.ok) {
+            const dataFeat = await responseFeat.json();
+            const dataCat = await responseCat.json();
+            const featureNames = dataFeat.map((feature) => feature).join(", ");
+            const categoryNames = dataCat.map((category) => category);
+
             return {
               id: item._id,
               imageUrl: item.image.url,
               pName: item.name,
-              pCat: item.category,
+              pCat: categoryNames,
               pDesc: item.desc,
               price: item.price.toLocaleString(),
               feature: featureNames,
             };
           } else {
-            console.error("Error fetching feature names:", response.statusText);
+            console.error("Error fetching feature names:", responseFeat.statusText);
+            console.error("Error fetching category names:", responseCat.statusText);
             return null;
           }
         })
@@ -55,7 +68,7 @@ export default function ProductsList() {
   };
 
   useEffect(() => {
-    fetchAllFeatureNames();
+    fetchAll();
   }, [items]);
 
   const columns = [
@@ -75,7 +88,7 @@ export default function ProductsList() {
     { field: "pName", headerName: "Name", width: 100 },
     { field: "pCat", headerName: "Category", width: 100 },
     { field: "pDesc", headerName: "Description", width: 130 },
-    { field: "price", headerName: "Price(Rp.)", width: 100,},
+    { field: "price", headerName: "Price(Rp.)", width: 100, },
     { field: "feature", headerName: "Features", width: 200 },
     {
       field: "actions",

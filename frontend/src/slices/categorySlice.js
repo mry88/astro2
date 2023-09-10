@@ -120,14 +120,20 @@ const categorySlice = createSlice({
       state.deleteStatus = "pending";
     },
     [categoryDelete.fulfilled]: (state, action) => {
-      const newList = state.items.filter(
-        (item) => item._id !== action.payload._id
-      );
-      state.items = newList;
-      state.deleteStatus = "success";
-      toast.error("Category Deleted!", {
-        position: "bottom-left",
-      });
+      if (action.payload) {
+        const newList = state.items.filter(
+          (item) => item._id !== action.payload._id
+        );
+        state.items = newList;
+        state.deleteStatus = "success";
+        toast.success("Category Deleted!", {
+          position: "bottom-left",
+        });
+      } else {
+        toast.error("Category is Used", {
+          position: "bottom-left",
+        });
+      }
     },
     [categoryDelete.rejected]: (state, action) => {
       state.deleteStatus = "rejected";
@@ -136,14 +142,20 @@ const categorySlice = createSlice({
       state.editStatus = "pending";
     },
     [categoryEdit.fulfilled]: (state, action) => {
-      const updatedCategory = state.items.map((category) =>
-        category._id === action.payload._id ? action.payload : category
-      );
-      state.items = updatedCategory;
-      state.editStatus = "success";
-      toast.info("Category Edited", {
-        position: "bottom-left",
-      });
+      if (action.payload) {
+        const updatedCategory = state.items.map((category) =>
+          category._id === action.payload._id ? action.payload : category
+        );
+        state.items = updatedCategory;
+        state.editStatus = "success";
+        toast.info("Category Edited", {
+          position: "bottom-left",
+        });
+      } else {
+        toast.error("Category is Used", {
+          position: "bottom-left",
+        });
+      }
     },
   }
 });

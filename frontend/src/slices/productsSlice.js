@@ -120,7 +120,7 @@ const productsSlice = createSlice({
       );
       state.items = newList;
       state.deleteStatus = "success";
-      toast.error("Product Deleted!", {
+      toast.success("Product Deleted!", {
         position: "bottom-left",
       });
     },

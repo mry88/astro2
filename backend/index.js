@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/products", async (req, res) => {
-  const products = await Product.find().populate('features').exec();
+  const products = await Product.find();
   res.send(products);
 });
 

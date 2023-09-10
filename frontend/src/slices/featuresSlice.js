@@ -117,14 +117,20 @@ const featuresSlice = createSlice({
       state.deleteStatus = "pending";
     },
     [featuresDelete.fulfilled]: (state, action) => {
-      const newList = state.items.filter(
-        (item) => item._id !== action.payload._id
-      );
-      state.items = newList;
-      state.deleteStatus = "success";
-      toast.error("Feature Deleted!", {
-        position: "bottom-left",
-      });
+      if (action.payload) {
+        const newList = state.items.filter(
+          (item) => item._id !== action.payload._id
+        );
+        state.items = newList;
+        state.deleteStatus = "success";
+        toast.success("Feature Deleted!", {
+          position: "bottom-left",
+        });
+      } else {
+        toast.error("Feature is Used", {
+          position: "bottom-left",
+        });
+      }
     },
     [featuresDelete.rejected]: (state, action) => {
       state.deleteStatus = "rejected";
@@ -133,14 +139,20 @@ const featuresSlice = createSlice({
       state.editStatus = "pending";
     },
     [featuresEdit.fulfilled]: (state, action) => {
-      const updatedFeatures = state.items.map((features) =>
-        features._id === action.payload._id ? action.payload : features
-      );
-      state.items = updatedFeatures;
-      state.editStatus = "success";
-      toast.info("Feature Edited", {
-        position: "bottom-left",
-      });
+      if (action.payload) {
+        const updatedFeatures = state.items.map((features) =>
+          features._id === action.payload._id ? action.payload : features
+        );
+        state.items = updatedFeatures;
+        state.editStatus = "success";
+        toast.info("Feature Edited", {
+          position: "bottom-left",
+        });
+      } else {
+        toast.error("Feature is Used", {
+          position: "bottom-left",
+        });
+      }
     },
     [featuresEdit.rejected]: (state, action) => {
       state.editStatus = "rejected";

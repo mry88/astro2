@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
       if (uploadedResponse) {
         const product = new Product({
           name,
-          category,
+          category: category,
           desc,
           price,
           image: uploadedResponse,
@@ -113,17 +113,11 @@ router.put("/:id", isAdmin, async (req, res) => {
 //GET ALL PRODUCTS
 
 router.get("/", async (req, res) => {
-  const qCat = req.query.category;
   try {
-    let products;
-
-    if (qCat) {
-      products = await Product.find({
-        category: qCat,
-      }).sort({ _id: -1 });
-    } else {
-      products = await Product.find().sort({ _id: -1 });
-    }
+    const products = await Product.find()
+      .populate("category")
+      .populate("features")
+      .sort({ _id: -1 });
 
     res.status(200).send(products);
   } catch (error) {
@@ -135,10 +129,14 @@ router.get("/", async (req, res) => {
 
 router.get("/find/:id", async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate('features');
+    const product = await Product.findById(req.params.id)
+      .populate('category') // Populate the 'category' field
+      .populate('features'); // Populate the 'features' field
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
+
     res.status(200).send(product);
   } catch (error) {
     console.error("Error fetching product:", error.message, error.stack);
