@@ -10,12 +10,12 @@ const NavBar = () => {
   const auth = useSelector((state) => state.auth);
 
   return (
-    <nav className="nav-bar">
+    <nav className="bg-indigo-900 w-full h-16 justify-between flex items-center shadow-lg">
       <Link to="/">
-        <h2>AstroFLaz</h2>
+        <h2 className="pl-10 text-slate-100 text-5xl font-sans pb-3">AstroFLaz</h2>
       </Link>
       <Link to="/cart">
-        <div className="nav-bag">
+        <div className="flex text-slate-100 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35"
@@ -34,11 +34,11 @@ const NavBar = () => {
       {auth._id ? (
         <Links>
           {auth.isAdmin ? (
-            <div>
+            <div className="flex flex-col  text-slate-100 text-xl font-sans pt-1">
               <Link to="/admin">Admin</Link>
             </div>
           ) : null}
-          <div
+          <div className="flex flex-col pr-10 text-slate-100 text-xl font-sans pb-2"
             onClick={() => {
               dispatch(logoutUser(null));
               toast.warning("Logged out!", { position: "bottom-left" });
@@ -49,8 +49,10 @@ const NavBar = () => {
         </Links>
       ) : (
         <AuthLinks>
-          <Link to="/login">Login</Link>
-          <Link to="register">Register</Link>
+          <div className="flex pt-1 pr-10 text-slate-100 text-xl font-sans pb-2">
+            <Link to="/login">Login</Link>
+            <Link to="register">Register</Link>
+          </div>
         </AuthLinks>
       )}
     </nav>
