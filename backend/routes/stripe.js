@@ -1,6 +1,6 @@
 const express = require("express");
 const Stripe = require("stripe");
-const { Order } = require("../models/Order");
+const { Order } = require("../models/order");
 
 require("dotenv").config();
 
@@ -101,10 +101,7 @@ router.post("/create-checkout-session", async (req, res) => {
 const createOrder = async (customer, data, line_items) => {
   const newOrder = new Order({
     userId: customer.metadata.userId,
-    customerId: data.customer,
-    paymentIntentId: data.payment_intent,
     products: line_items.data,
-    subtotal: data.amount_subtotal,
     total: data.amount_total,
     shipping: data.customer_details,
     payment_status: data.payment_status,

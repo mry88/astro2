@@ -14,12 +14,12 @@ const Product = () => {
 
   const [product, setProduct] = useState({
     name: '',
-    brand: '',
+    category: '',
     desc: '',
     price: 0,
     image: null,
-    video: '',
     features: [],
+    video: '',
   });
   const [loading, setLoading] = useState(false);
   const [selectedFeaturePrice, setSelectedFeaturePrice] = useState(0);
@@ -106,7 +106,7 @@ const Product = () => {
               <ProductDetails>
                 <h3>{product.name}</h3>
                 <p>
-                  <span>Category:</span> {product.category}
+                  <span>Category:</span> {product.category.name}
                 </p>
                 <p>
                   <span>Description:</span> {product.desc}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,11 +10,15 @@ import {
 } from "../slices/cartSlice";
 
 import { Link } from "react-router-dom";
-import PayButton from "./PayButton";
+import axios from "axios";
+import { url } from "../slices/api";
+import { ordersCreate } from "../slices/ordersSlice";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const auth = useSelector((state) => state.auth);
+  const { list } = useSelector((state) => state.orders);
+  const [token, setToken] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,6 +39,81 @@ const Cart = () => {
   const handleClearCart = () => {
     dispatch(clearCart());
   };
+
+  const handleCheckout = async (items) => {
+    // console.log(list);
+    try {
+      const pName = items.map((i) => (i.name));
+      const pFeatures = items.map((i) => (i.features));
+      const pTotal = items.map((i) => (i.totalPrice));
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
+
+      const {data} = await axios.post(`${url}/orders`, {
+        userId: auth._id,
+        userEmail: auth.email,
+        products: pName,
+        selectedFeatures: pFeatures,
+        total: pTotal,
+      }, config);
+
+      setToken(data.token);
+    } catch (e) {
+      console.log(e);
+    }
+
+  };
+
+  useEffect(() => {
+    if (token) {
+      window.snap.pay(token, {
+        onSuccess: (result) => {
+          localStorage.setItem("Pembayaran", JSON.stringify(result));
+          setToken("");
+          console.log('Transaction was successful:', result);
+        },
+        onPending: (result) => {
+          axios.put(``, {
+
+          });
+
+          localStorage.setItem("Pembayaran", JSON.stringify(result));
+          setToken("");
+          console.log('Transaction is pending:', result);
+        },
+        onError: (result) => {
+          console.log('Transaction had an error:', result);
+          setToken("");
+        },
+        onClose: () => {
+          console.log('User closed the popup without finishing the payment');
+          setToken("");
+        }
+      });
+    }
+  }, [token]);
+
+  useEffect(() => {
+    // url masih sandbox
+    const midtransUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+
+    let scriptTag = document.createElement("script");
+    scriptTag.src = midtransUrl;
+
+    const midtransClientKey = "SB-Mid-client-YsLvrX16dputBRg8";
+    scriptTag.setAttribute("data-client-key", midtransClientKey);
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
+    }
+  }, []);
+
   return (
     <div className="cart-container">
       <h2>Shopping Cart</h2>
@@ -113,7 +192,8 @@ const Cart = () => {
               </div>
               <p>Taxes and shipping calculated at checkout</p>
               {auth._id ? (
-                <PayButton cartItems={cart.cartItems} />
+                // <PayButton cartItems={cart.cartItems} />
+                <button onClick={() => handleCheckout(cart.cartItems)}>Check out</button>
               ) : (
                 <button
                   className="cart-login"

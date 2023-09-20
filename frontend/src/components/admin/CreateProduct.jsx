@@ -60,7 +60,7 @@ const CreateProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    // console.log(category);
     dispatch(
       productsCreate({
         name,
@@ -92,11 +92,14 @@ const CreateProduct = () => {
         />
         <h5>Select Category :</h5>
         <select onChange={(e) => setCategory(e.target.value)} required>
-        {catItems.map((item) => (
-          <option key={item._id} value={item._id}>
-            {item.name}
+          <option value="" disabled selected>
+            Select Category
           </option>
-        ))}
+          {catItems.map((item) => (
+            <option key={item._id} value={item._id}>
+              {item.name}
+            </option>
+          ))}
         </select>
         <h5>Product Name :</h5>
         <input

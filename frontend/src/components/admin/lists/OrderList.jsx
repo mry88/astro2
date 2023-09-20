@@ -18,60 +18,62 @@ export default function OrderList() {
   const rows =
     list &&
     list.map((order) => {
+      // Initialize an empty array to store feature names
+      const featureNames = [];
+
+      // Loop through the first layer (array)
+      order.selectedFeatures.forEach((innerArray) => {
+        // Loop through the second layer (objects)
+        innerArray.forEach((feature) => {
+          if (feature.name) {
+            featureNames.push(feature.name);
+          }
+        });
+      });
+
+      // Join the feature names with a comma
+      const featureNamesString = featureNames.join(', ');
+      console.log(order);
+      
       return {
         id: order._id,
-        cName: order.shipping.name,
-        amount: (order.total / 100)?.toLocaleString(),
-        dStatus: order.delivery_status,
-        date: moment(order.createdAt).fromNow(),
+        oUser: order.userId,
+        oUserEmail: order.userEmail,
+        oProduct: order.products,
+        oFeatures: featureNamesString,
+        oTotal: order.total.toLocaleString(),
+        oStatus: order.payment_status,
       };
     });
 
   const columns = [
-    { field: "id", headerName: "ID", width: 220 },
-    { field: "cName", headerName: "Name", width: 120 },
-    { field: "amount", headerName: "Amount($)", width: 100 },
-    {
-      field: "delivery_status",
-      headerName: "Status",
-      width: 100,
-      renderCell: (params) => {
-        return (
-          <div>
-            {params.row.dStatus === "pending" ? (
-              <Pending>Pending</Pending>
-            ) : params.row.dStatus === "dispatched" ? (
-              <Dispatched>Dispatched</Dispatched>
-            ) : params.row.dStatus === "delivered" ? (
-              <Delivered>Delivered</Delivered>
-            ) : (
-              "error"
-            )}
-          </div>
-        );
-      },
-    },
-    { field: "date", headerName: "Date", width: 120 },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 220,
-      renderCell: (params) => {
-        return (
-          <Actions>
-            <DispatchBtn onClick={() => handleOrderDispatch(params.row.id)}>
-              Dispatch
-            </DispatchBtn>
-            <DeliveryBtn onClick={() => handleDeliver(params.row.id)}>
-              Delivered
-            </DeliveryBtn>
-            <View onClick={() => navigate(`/order/${params.row.id}`)}>
-              View
-            </View>
-          </Actions>
-        );
-      },
-    },
+    { field: "id", headerName: "ID Order", width: 220 },
+    { field: "oUser", headerName: "ID User", width: 220 },
+    { field: "oUserEmail", headerName: "Email", width: 120 },
+    { field: "oProduct", headerName: "Product Name", width: 150 },
+    { field: "oFeatures", headerName: "Features", width: 200 },
+    { field: "oTotal", headerName: "Total (Rp.)", width: 120 },
+    { field: "oStatus", headerName: "Status", width: 100 },
+    // {
+    //   field: "actions",
+    //   headerName: "Actions",
+    //   width: 220,
+    //   renderCell: (params) => {
+    //     return (
+    //       <Actions>
+    //         <DispatchBtn onClick={() => handleOrderDispatch(params.row.id)}>
+    //           Dispatch
+    //         </DispatchBtn>
+    //         <DeliveryBtn onClick={() => handleDeliver(params.row.id)}>
+    //           Delivered
+    //         </DeliveryBtn>
+    //         <View onClick={() => navigate(`/order/${params.row.id}`)}>
+    //           View
+    //         </View>
+    //       </Actions>
+    //     );
+    //   },
+    // },
   ];
 
   const handleOrderDispatch = (id) => {

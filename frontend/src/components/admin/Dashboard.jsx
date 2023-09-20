@@ -20,14 +20,14 @@ const Dashboard = () => {
         >
           <FaStore /> Products
         </NavLink>
-        {/* <NavLink
+        <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"
           }
           to="/admin/orders"
         >
           <FaClipboard /> Orders
-        </NavLink> */}
+        </NavLink>
         <NavLink
           className={({ isActive }) =>
             isActive ? "link-active" : "link-inactive"
