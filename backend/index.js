@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 require("./models/features");
 require("./models/category");
 require("./models/product");
+require("./models/order");
 const register = require("./routes/register");
 const login = require("./routes/login");
 const orders = require("./routes/orders");
@@ -15,6 +16,7 @@ const categoryRoute = require("./routes/category");
 const { Product } = require("./models/product");
 const { Feature } = require("./models/features");
 const { Category } = require("./models/category");
+const { Order } = require("./models/order");
 
 const app = express();
 
@@ -57,6 +59,11 @@ app.get("/features", async (req, res) => {
 app.get("/category", async (req, res) => {
   const category = await Category.find();
   res.send(category);
+});
+
+app.get("/orders", async (req, res) => {
+  const orders = await Order.find();
+  res.send(orders);
 });
 
 const uri = process.env.DB_URI;

@@ -1,11 +1,80 @@
-const { Order } = require("../models/Order");
+const { Order } = require("../models/order");
 const { auth, isUser, isAdmin } = require("../middleware/auth");
 const moment = require("moment");
+const { default: axios } = require("axios");
+const midtransClient = require("midtrans-client");
+const { User } = require("../models/user");
 
 const router = require("express").Router();
 
 //CREATE
-// createOrder is fired by stripe webhook... check stripe.js
+router.post('/', async (req, res) => {
+  try {
+    const snap = new midtransClient.Snap({
+      isProduction: false,
+      serverKey: 'SB-Mid-server-EHSak3_uAAvaFgT3QEG8w27I',
+      clientKey: 'SB-Mid-client-YsLvrX16dputBRg8',
+    });
+    
+    const { userId, products, selectedFeatures, total, userEmail } = req.body;
+    const totals = total[0];
+    // console.log(total);
+
+    // Create a new Order document and save it to the database
+    // const user = await User.findOne({ _id: userId });
+    const newOrder = new Order({
+      userId: userId, 
+      userEmail: userEmail, 
+      products: products, 
+      selectedFeatures: selectedFeatures, 
+      total: totals, 
+      // Add other order data as needed
+    });
+
+    await newOrder.save();
+
+    // Construct the Midtrans request payload
+    const midtransPayload = {
+      transaction_details: {
+        order_id: newOrder._id.toString(),
+        gross_amount: totals,
+      },
+      // credit_card: {
+      //   secure: true,
+      // },
+      customer_details: {
+        email: userEmail,
+      },
+      notification: {
+        // Set the notification URL here
+        // Replace 'https://your-server.com/midtrans-notification' with your actual URL
+        // Make sure it matches the URL you configured in your Midtrans account
+        callback_url: 'http://localhost:5000/midtrans-notification',
+        // Other notification options if needed
+      },
+    };
+
+    snap.createTransaction(midtransPayload).then((transaction) => {
+      const dataPayment = {
+        response: JSON.stringify(transaction),
+      }
+      const token = transaction.token;
+      res.status(200).json({message: "berhasil", dataPayment, token: token});
+    })
+
+
+
+    // Make a request to Midtrans API to get a payment token
+    // const transaction = await snap.createTransaction(midtransPayload);
+    // res.send({ transactionToken: transaction.token });
+
+    // // Return the Midtrans payment token to the client
+    // res.json({ token: response.data.token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to initiate payment' });
+  }
+});
 
 //UPDATE
 router.put("/:id", isAdmin, async (req, res) => {
@@ -46,12 +115,8 @@ router.get("/find/:userId", isUser, async (req, res) => {
 //GET ALL ORDERS
 
 router.get("/", isAdmin, async (req, res) => {
-  const query = req.query.new;
-
   try {
-    const orders = query
-      ? await Order.find().sort({ _id: -1 }).limit(4)
-      : await Order.find().sort({ _id: -1 });
+    const orders = await Order.find().sort({ _id: -1 });
     res.status(200).send(orders);
   } catch (err) {
     res.status(500).send(err);
@@ -154,6 +219,33 @@ router.get("/week-sales", isAdmin, async (req, res) => {
     res.status(200).send(income);
   } catch (err) {
     res.status(500).send(err);
+  }
+});
+
+// Handle Midtrans notification
+router.post('/midtrans-notification', async (req, res) => {
+  try {
+    const midtransResponse = req.body;
+
+    // Check if the payment is successful
+    if (midtransResponse.status_code === '200') {
+      const orderId = midtransResponse.order_id;
+
+      // Update the order status in your database
+      const updatedOrder = await Order.findOneAndUpdate({ _id: orderId }, { payment_status: 'paid' }, { new: true });
+
+      // You may also want to handle other post-payment actions here
+      // such as sending order confirmation emails, etc.
+
+      // Respond to Midtrans with a success message
+      res.status(200).send(updatedOrder);
+    } else {
+      // Handle unsuccessful payment
+      res.status(400).send('Bad Request');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
