@@ -35,6 +35,15 @@ const Cart = () => {
   const handleClearCart = () => {
     dispatch(clearCart());
   };
+
+  const cartItemNameStyle = {
+    fontWeight: 'bold', 
+  };
+
+  const additionalFeatureStyle = {
+    fontWeight: 'bold', 
+  };
+
   return (
     <div className="cart-container">
       <h2>Shopping Cart</h2>
@@ -77,9 +86,9 @@ const Cart = () => {
                       <img src={cartItem.image?.url} alt={cartItem.name} />
                     </Link>
                     <div>
-                      <h3>{cartItem.name}</h3>
-                      <p>{cartItem.desc}</p><br />
-                      <h3>Additional Feature :</h3>
+                      <h3 style={cartItemNameStyle}>{cartItem.name}</h3> 
+                      <p>{cartItem.desc.split('.')[0]}</p>
+                      <h3 style={additionalFeatureStyle}>Additional Feature :</h3>
                       {cartItem.selectedFeatures && cartItem.selectedFeatures.map(fn => (
                         <p key={fn}>{fn}</p>
                       ))}

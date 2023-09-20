@@ -13,6 +13,9 @@ body {
     /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #ffffff, #ffffff, #ffffff);
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /* background-image: url(/src/image/bg3.jpg); */
+    background: darkgray;
+    
 }
 
 .login {
@@ -35,6 +38,7 @@ body {
     max-width: 320px;
     width: 100vw;
     margin: 2em auto;
+    
 }
 
 h2{
@@ -49,6 +53,7 @@ label{
 .btn {
     border: 1px solid #e9ecef;
     padding: .9em 1em;
+    
 }
 
 #form>input:focus {
