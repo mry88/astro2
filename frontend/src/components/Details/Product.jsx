@@ -48,6 +48,7 @@ const Product = () => {
         selectedFeaturePrice += parseFloat(feature.price);
       }
     });
+
     const productWithFeatures = {
       ...product,
       selectedFeatures: selectedFeatures,

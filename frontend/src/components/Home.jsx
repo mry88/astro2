@@ -58,34 +58,33 @@
 
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const Home = () => {
   const { items: data, status } = useSelector((state) => state.products);
   const [searchTerm, setSearchTerm] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(""); // State untuk kategori
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const { items } = useSelector((state) => state.category);
-
+  
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
+  
   const handleMinPriceChange = (event) => {
     setMinPrice(event.target.value);
   };
-
+  
   const handleMaxPriceChange = (event) => {
     setMaxPrice(event.target.value);
   };
-
+  
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
-    console.log(selectedCategory);
   };
-
+  
   useEffect(() => {
     const filteredProducts = data.filter((product) => {
       const nameMatch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -95,52 +94,47 @@ const Home = () => {
       const categoryMatch = !selectedCategory || product.category.name === selectedCategory;
       return nameMatch && priceMatch && categoryMatch;
     });
-
+  
     setFilteredData(filteredProducts);
   }, [data, searchTerm, minPrice, maxPrice, selectedCategory]);
-
+  
+  const scrollButtonRef = useRef();
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        scrollButtonRef.current.style.display = "block";
+      } else {
+        scrollButtonRef.current.style.display = "none";
+      }
+    };
+  
+    window.addEventListener("scroll", handleScroll);
+  
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+  
   return (
-    <div className="home-container">
-      <div className="sidebar">
-        <h2>Filter Products</h2>
-        <div className="dropdown">
-          <label htmlFor="searchInput">Search Products:</label>
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </div>
-        <div className="dropdown">
-          <label htmlFor="minPriceInput">Min Price:</label>
-          <input
-            id="minPriceInput"
-            type="text"
-            placeholder="Min Price"
-            value={minPrice}
-            onChange={handleMinPriceChange}
-          />
-        </div>
-        <div className="dropdown">
-          <label htmlFor="maxPriceInput">Max Price:</label>
-          <input
-            id="maxPriceInput"
-            type="text"
-            placeholder="Max Price"
-            value={maxPrice}
-            onChange={handleMaxPriceChange}
-          />
-        </div>
-        <div className="dropdown">
+    <div className="bg-gradient-to-b from-purple-900 to-blue-900 font-roboto flex h-full w-full min-h-screen overflow-y-auto">
+      <div className="font-roboto bg-gray-800 flex flex-col w-96 p-5">
+        <h3 className="text-white font-sans text-2xl mb-3 mt-3">Filter Products</h3>
+        <div className="text-white font-sans text-base mb-1 mt-1">
           <label htmlFor="categorySelect">Select Category:</label>
-          <h5>Select Category :</h5>
           <select
+            className="outline-none h-10 px-2 border border-purple-600 w-80 rounded-lg text-black"
             id="categorySelect"
-            // value={selectedCategory}
             onChange={handleCategoryChange}
-            required>
+            required
+          >
             {items.map((item) => (
               <option key={item._id} value={item.name}>
                 {item.name}
@@ -148,23 +142,54 @@ const Home = () => {
             ))}
           </select>
         </div>
+        <div className="text-white font-sans text-base mb-1 mt-1">
+          <label htmlFor="searchInput">Search Products:</label>
+          <input
+            className="outline-none h-10 px-2 border border-purple-600 w-80 rounded-lg"
+            id="searchInput"
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </div>
+        <div className="text-white font-sans text-base mb-1 mt-1">
+          <label htmlFor="minPriceInput">Min Price:</label>
+          <input
+            className="outline-none h-10 px-2 border border-purple-600 w-80 rounded-lg"
+            id="minPriceInput"
+            type="text"
+            placeholder="Min Price"
+            value={minPrice}
+            onChange={handleMinPriceChange}
+          />
+        </div>
+        <div className="text-white font-sans text-base mb-1 mt-1">
+          <label htmlFor="maxPriceInput">Max Price:</label>
+          <input
+            className="outline-none h-10 px-2 border border-purple-600 w-80 rounded-lg"
+            id="maxPriceInput"
+            type="text"
+            placeholder="Max Price"
+            value={maxPrice}
+            onChange={handleMaxPriceChange}
+          />
+        </div>
       </div>
-      <div className="main-content">
-        <h2>Product List</h2>
-        <div className="products">
+  
+      <div className="flex-grow overflow-y-auto">
+        <h2 className="text-white font-roboto text-4xl mb-3 mt-3 text-center">Product List</h2>
+  
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-4 gap-4 ml-4">
           {status === "success" ? (
             <>
               {filteredData.map((product) => (
-                <div key={product._id} className="product">
-                  <h3>{product.name}</h3>
+                <div key={product._id} className="bg-white border border-black shadow-lg p-4 rounded-lg">
                   <Link to={"/product/" + product._id}>
                     <img className="w-full h-48 object-cover rounded-t-lg" src={product.image.url} alt={product.name} />
                   </Link>
-                  <div className="details">
+                  <div className="text-gray-800 text-sm font-sans md:font-medium mt-2">
                     <span>{product.category.name}</span>
-                  </div>
-                  <div className="details">
-                    <span>{product.desc}</span>
                   </div>
                   <h3 className="text-gray-800 font-sans md:font-bold text-2xl pb-2">{product.name}</h3>
                   <div className="text-gray-800 text-xl font-sans md:font-bold mt-1">
@@ -177,15 +202,24 @@ const Home = () => {
               ))}
             </>
           ) : status === "pending" ? (
-            <p>Loading...</p>
+            <p className="text-white">Loading...</p>
           ) : (
-            <p>Unexpected error occurred...</p>
+            <p className="text-white">Unexpected error occurred...</p>
           )}
         </div>
       </div>
+
+      <button
+        ref={scrollButtonRef}
+        onClick={scrollToTop}
+        className="fixed bottom-10 right-10 bg-red-600 text-white px-4 py-2 rounded-full border border-gray-300 focus:outline-none hover:bg-red-700 focus:ring-4 focus:ring-gray-200"
+      >
+        Back to Top
+      </button>
     </div>
   );
 };
 
 export default Home;
+
 
