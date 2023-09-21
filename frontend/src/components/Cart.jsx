@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,19 +12,26 @@ import {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { url } from "../slices/api";
-import { ordersCreate } from "../slices/ordersSlice";
+import { ordersCreate, ordersEdit } from "../slices/ordersSlice";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const auth = useSelector((state) => state.auth);
-  const { list } = useSelector((state) => state.orders);
   const [token, setToken] = useState("");
+  const [orderId, setOrderId] = useState("");
+  const orderIdRef = useRef(orderId);
+  const [showPDF, setShowPDF] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
+    orderIdRef.current = orderId;
+  }, [orderId]);
+
+  useEffect(() => {
     dispatch(getTotals());
+
   }, [cart, dispatch]);
 
   const handleAddToCart = (product) => {
@@ -53,7 +60,7 @@ const Cart = () => {
         }
       };
 
-      const {data} = await axios.post(`${url}/orders`, {
+      const { data } = await axios.post(`${url}/orders`, {
         userId: auth._id,
         userEmail: auth.email,
         products: pName,
@@ -62,10 +69,28 @@ const Cart = () => {
       }, config);
 
       setToken(data.token);
+      setOrderId(data.oId);
     } catch (e) {
       console.log(e);
     }
-    dispatch(clearCart());
+  };
+
+  const handleSuccessfulPayment = async (id) => {
+    try {
+      const response = await axios.put(`${url}/orders/${id}`, {
+        payment_status: "paid", // Set the desired payment status here
+      });
+
+      if (response.status === 200) {
+        // Payment status updated successfully
+        console.log('update success');
+      } else {
+        // Handle the case where the update failed
+        console.error('Failed to update payment status');
+      }
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+    }
   };
 
   useEffect(() => {
@@ -73,16 +98,16 @@ const Cart = () => {
       window.snap.pay(token, {
         onSuccess: (result) => {
           localStorage.setItem("Pembayaran", JSON.stringify(result));
+          const id = orderIdRef.current;
+          handleSuccessfulPayment(id);
           setToken("");
+          dispatch(clearCart());
           console.log('Transaction was successful:', result);
         },
         onPending: (result) => {
-          axios.put(``, {
-
-          });
-
           localStorage.setItem("Pembayaran", JSON.stringify(result));
           setToken("");
+          dispatch(clearCart());
           console.log('Transaction is pending:', result);
         },
         onError: (result) => {
@@ -192,8 +217,16 @@ const Cart = () => {
               </div>
               <p>Taxes and shipping calculated at checkout</p>
               {auth._id ? (
+                <>
+                  {showPDF ? (
+                    <button onClick={() => setShowPDF(false)}>Back to Cart</button>
+                  ) : (
+                    <button onClick={() => setShowPDF(true)}>Download Order PDF</button>
+                  )}
+                  <button onClick={() => handleCheckout(cart.cartItems)}>Proceed to Checkout</button>
+                </>
                 // <PayButton cartItems={cart.cartItems} />
-                <button onClick={() => handleCheckout(cart.cartItems)}>Check out</button>
+                // <button onClick={() => handleCheckout(cart.cartItems)}>Check out</button>
               ) : (
                 <button
                   className="cart-login"
