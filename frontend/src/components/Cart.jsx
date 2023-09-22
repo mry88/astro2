@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,10 +9,17 @@ import {
   removeFromCart,
 } from "../slices/cartSlice";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
+
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { url } from "../slices/api";
-import OrderPDFModal from "./OrderPDF"
+import OrderPDF from "./OrderPDF";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -222,7 +229,7 @@ const Cart = () => {
                 <span>Subtotal</span>
                 <span className="amount">${cart.cartTotalAmount}</span>
               </div>
-              <p>Taxes and shipping calculated at checkout</p>
+              <p>Download PDF</p>
               {auth._id ? (
                 <>
                   {showPDF ? (
@@ -230,6 +237,7 @@ const Cart = () => {
                   ) : (
                     <button onClick={openPDFModal}>Download Order PDF</button>
                   )}
+                  <p>Continue to Checkout</p>
                   <button onClick={() => handleCheckout(cart.cartItems)}>Proceed to Checkout</button>
                 </>
                 // <PayButton cartItems={cart.cartItems} />
@@ -265,6 +273,24 @@ const Cart = () => {
           </div>
         </div>
       )}
+      <Dialog
+        open={showPDF}
+        onClose={closePDFModal}
+        aria-labelledby="order-pdf-dialog-title"
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle id="order-pdf-dialog-title">Order PDF</DialogTitle>
+        <DialogContent>
+          {/* Render the PDF component here */}
+          <OrderPDF orderData={cart.cartItems} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closePDFModal} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

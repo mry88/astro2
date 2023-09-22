@@ -102,10 +102,12 @@ const Home = () => {
   
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 200) {
-        scrollButtonRef.current.style.display = "block";
-      } else {
-        scrollButtonRef.current.style.display = "none";
+      if (scrollButtonRef.current) { // Check if scrollButtonRef.current exists
+        if (window.scrollY > 200) {
+          scrollButtonRef.current.style.display = "block";
+        } else {
+          scrollButtonRef.current.style.display = "none";
+        }
       }
     };
   
