@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { url } from "../slices/api";
-import { ordersCreate, ordersEdit } from "../slices/ordersSlice";
+import OrderPDFModal from "./OrderPDF"
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -45,6 +45,13 @@ const Cart = () => {
   };
   const handleClearCart = () => {
     dispatch(clearCart());
+  };
+
+  const openPDFModal = () => {
+    setShowPDF(true);
+  };
+  const closePDFModal = () => {
+    setShowPDF(false);
   };
 
   const handleCheckout = async (items) => {
@@ -219,9 +226,9 @@ const Cart = () => {
               {auth._id ? (
                 <>
                   {showPDF ? (
-                    <button onClick={() => setShowPDF(false)}>Back to Cart</button>
+                    <button onClick={closePDFModal}>Back to Cart</button>
                   ) : (
-                    <button onClick={() => setShowPDF(true)}>Download Order PDF</button>
+                    <button onClick={openPDFModal}>Download Order PDF</button>
                   )}
                   <button onClick={() => handleCheckout(cart.cartItems)}>Proceed to Checkout</button>
                 </>
