@@ -157,7 +157,7 @@ const Cart = () => {
                     </Link>
                     <div>
                       <h3>{cartItem.name}</h3>
-                      <p>{cartItem.desc}</p><br />
+                     <p>{cartItem.desc.split('. ')[0]}</p><br />
                       <h3>Additional Feature :</h3>
                       {cartItem.selectedFeatures && cartItem.selectedFeatures.map(fn => (
                         <p key={fn}>{fn}</p>
