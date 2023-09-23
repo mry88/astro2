@@ -21,6 +21,8 @@ export default function UsersList() {
         id: user._id,
         uName: user.name,
         uEmail: user.email,
+        uPhone: user.nohp,
+        uAddress: user.address,
         isAdmin: user.isAdmin,
       };
     });
@@ -29,6 +31,8 @@ export default function UsersList() {
     { field: "id", headerName: "ID", width: 220 },
     { field: "uName", headerName: "Name", width: 150 },
     { field: "uEmail", headerName: "Email", width: 200 },
+    { field: "uPhone", headerName: "Phone", width: 200 },
+    { field: "uAddress", headerName: "Address", width: 200 },
     {
       field: "isAdmin",
       headerName: "Role",

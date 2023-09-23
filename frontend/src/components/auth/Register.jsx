@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../slices/authSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faLock, faUser, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faLock, faUser, faEye, faEyeSlash, faAddressCard, faPhone } from "@fortawesome/free-solid-svg-icons";
 import COVER_IMAGE from "./roket-refelct.jpg";
 
 const Register = () => {
@@ -14,6 +14,8 @@ const Register = () => {
   const [user, setUser] = useState({
     name: "",
     email: "",
+    nohp: "",
+    address: "",
     password: "",
   });
 
@@ -83,6 +85,42 @@ const Register = () => {
                   className="w-full px-4 py-2 border-b border-gray-300 focus:outline-none focus:border-red-600"
                   placeholder="Email"
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="relative">
+              <label htmlFor="email" className="block text-gray-700 font-semibold mb-1">
+                No HP
+              </label>
+              <div className="flex items-center">
+                <FontAwesomeIcon
+                  icon={faPhone}
+                  className="text-gray-600 mr-2"
+                />
+                <input
+                  id="noHp"
+                  type="tel"
+                  className="w-full px-4 py-2 border-b border-gray-300 focus:outline-none focus:border-red-600"
+                  placeholder="No Hp"
+                  onChange={(e) => setUser({ ...user, nohp: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="relative">
+              <label htmlFor="email" className="block text-gray-700 font-semibold mb-1">
+                Alamat
+              </label>
+              <div className="flex items-center">
+                <FontAwesomeIcon
+                  icon={faAddressCard}
+                  className="text-gray-600 mr-2"
+                />
+                <input
+                  id="address"
+                  type="text"
+                  className="w-full px-4 py-2 border-b border-gray-300 focus:outline-none focus:border-red-600"
+                  placeholder="Address"
+                  onChange={(e) => setUser({ ...user, address: e.target.value })}
                 />
               </div>
             </div>

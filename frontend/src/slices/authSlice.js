@@ -7,6 +7,8 @@ const initialState = {
   token: localStorage.getItem("token"),
   name: "",
   email: "",
+  nohp: "",
+  address: "",
   _id: "",
   isAdmin: false,
   registerStatus: "",
@@ -23,6 +25,8 @@ export const registerUser = createAsyncThunk(
       const token = await axios.post(`${url}/register`, {
         name: values.name,
         email: values.email,
+        nohp: values.nohp,
+        address: values.address,
         password: values.password,
       });
 
@@ -84,6 +88,8 @@ const authSlice = createSlice({
           token,
           name: user.name,
           email: user.email,
+          nohp: user.nohp,
+          address: user.address,
           _id: user._id,
           isAdmin: user.isAdmin,
           userLoaded: true,
@@ -98,6 +104,8 @@ const authSlice = createSlice({
         token: "",
         name: "",
         email: "",
+        nohp: "",
+        address: "",
         _id: "",
         isAdmin: false,
         registerStatus: "",
@@ -119,11 +127,14 @@ const authSlice = createSlice({
           token: action.payload,
           name: user.name,
           email: user.email,
+          nohp: user.nohp,
+          address: user.address,
           _id: user._id,
           isAdmin: user.isAdmin,
           registerStatus: "success",
         };
       } else return state;
+      
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       return {
@@ -143,6 +154,8 @@ const authSlice = createSlice({
           token: action.payload,
           name: user.name,
           email: user.email,
+          nohp: user.nohp,
+          address: user.address,
           _id: user._id,
           isAdmin: user.isAdmin,
           loginStatus: "success",
@@ -170,6 +183,8 @@ const authSlice = createSlice({
           token: action.payload,
           name: user.name,
           email: user.email,
+          nohp: user.nohp,
+          address: user.address,
           _id: user._id,
           isAdmin: user.isAdmin,
           getUserStatus: "success",

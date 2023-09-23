@@ -62,10 +62,13 @@ const Cart = () => {
   };
 
   const handleCheckout = async (items) => {
-    // console.log(list);
+    //console.log(items);
     try {
+      const pId = items.map((i) => (i._id));
       const pName = items.map((i) => (i.name));
+      const pCategory = items.map((i) => (i.category.name));
       const pFeatures = items.map((i) => (i.features));
+      const pQuantity = items.map((i) => (i.cartQuantity));
       const pTotal = items.map((i) => (i.totalPrice));
 
       const config = {
@@ -76,8 +79,14 @@ const Cart = () => {
 
       const { data } = await axios.post(`${url}/orders`, {
         userId: auth._id,
+        userName: auth.name,
         userEmail: auth.email,
+        userPhone: auth.nohp,
+        userAddress: auth.address,
+        productsId: pId,
         products: pName,
+        pCategory: pCategory,
+        pQuantity: pQuantity,
         selectedFeatures: pFeatures,
         total: pTotal,
       }, config);

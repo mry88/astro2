@@ -15,36 +15,76 @@ router.post('/', async (req, res) => {
       serverKey: 'SB-Mid-server-EHSak3_uAAvaFgT3QEG8w27I',
       clientKey: 'SB-Mid-client-YsLvrX16dputBRg8',
     });
-    
-    const { userId, products, selectedFeatures, total, userEmail } = req.body;
+
+    const { 
+      userId, 
+      products, 
+      selectedFeatures, 
+      total, 
+      userEmail, 
+      userName, 
+      userPhone, 
+      userAddress,
+      productsId,
+      pQuantity,
+      pCategory,
+    } = req.body;
+    const pId = productsId[0];
+    const pName = products[0];
     const totals = total[0];
+    const quantity = pQuantity[0];
     // console.log(total);
+    const totalPrice = quantity * totals;
 
     // Create a new Order document and save it to the database
     // const user = await User.findOne({ _id: userId });
     const newOrder = new Order({
-      userId: userId, 
-      userEmail: userEmail, 
-      products: products, 
-      selectedFeatures: selectedFeatures, 
-      total: totals, 
+      userId: userId,
+      userEmail: userEmail,
+      products: products,
+      selectedFeatures: selectedFeatures,
+      total: totalPrice,
       // Add other order data as needed
     });
 
     await newOrder.save();
+    // console.log(userName);
 
     // Construct the Midtrans request payload
     const midtransPayload = {
       transaction_details: {
         order_id: newOrder._id.toString(),
-        gross_amount: totals,
+        gross_amount: totalPrice,
       },
       // credit_card: {
       //   secure: true,
       // },
       customer_details: {
+        first_name: userName,
         email: userEmail,
+        phone: userPhone,
+        billing_address: {
+          first_name: userName,
+          phone: userPhone,
+          country_code: "IDN",
+          address: userAddress,
+        },
+        shipping_address: {
+          first_name: userName,
+          phone: userPhone,
+          address: userAddress,
+          country_code: "IDN"
+        },
       },
+      item_details: [{
+        id: pId,
+        price: totals,
+        quantity: quantity,
+        name: pName,
+        brand: "Astroflaz",
+        category: pCategory,
+        merchant_name: "Code Space Indonesia",
+      }],
       notification: {
         // Set the notification URL here
         // Replace 'https://your-server.com/midtrans-notification' with your actual URL
@@ -52,6 +92,7 @@ router.post('/', async (req, res) => {
         callback_url: 'http://localhost:5000/midtrans-notification',
         // Other notification options if needed
       },
+
     };
 
     snap.createTransaction(midtransPayload).then((transaction) => {
@@ -59,7 +100,7 @@ router.post('/', async (req, res) => {
         response: JSON.stringify(transaction),
       }
       const token = transaction.token;
-      res.status(200).json({message: "berhasil", dataPayment, token: token});
+      res.status(200).json({ message: "berhasil", dataPayment, token: token });
     })
 
 
